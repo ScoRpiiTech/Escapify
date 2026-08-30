@@ -91,11 +91,15 @@ android {
             keyAlias = "androiddebugkey"
             keyPassword = "android"
         }
-        create("release") {
-            storeFile = file("keystore/release.keystore")
-            storePassword = System.getenv("STORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+        val releaseKeystore = file("keystore/release.keystore")
+        val hasReleaseKeystore = releaseKeystore.exists() && System.getenv("STORE_PASSWORD") != null
+        if (hasReleaseKeystore) {
+            create("release") {
+                storeFile = releaseKeystore
+                storePassword = System.getenv("STORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
         }
         getByName("debug") {
             keyAlias = "androiddebugkey"
@@ -106,8 +110,10 @@ android {
     }
 
     buildTypes {
+        val releaseKeystore = file("keystore/release.keystore")
+        val hasReleaseKeystore = releaseKeystore.exists() && System.getenv("STORE_PASSWORD") != null
         release {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = if (hasReleaseKeystore) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
             isMinifyEnabled = true
             isShrinkResources = true
             isCrunchPngs = false
