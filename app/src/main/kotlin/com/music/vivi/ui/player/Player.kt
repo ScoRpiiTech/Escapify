@@ -2087,6 +2087,7 @@ fun BottomSheetPlayer(
                                         text = when (audioQuality) {
                                             AudioQuality.AUTO -> stringResource(R.string.audio_quality_auto)
                                             AudioQuality.HIGH -> stringResource(R.string.audio_quality_high)
+                                            AudioQuality.MEDIUM -> stringResource(R.string.audio_quality_medium)
                                             AudioQuality.LOW -> stringResource(R.string.audio_quality_low)
                                         }.uppercase(),
                                         style = MaterialTheme.typography.labelSmall.copy(

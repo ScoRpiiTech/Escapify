@@ -24,7 +24,11 @@ import androidx.media3.exoplayer.offline.DownloadNotificationHelper
 import com.music.innertube.YouTube
 import com.music.vivi.constants.AudioQuality
 import com.music.vivi.constants.AudioQualityKey
+import com.music.vivi.constants.DisableMobileDataKey
 import com.music.vivi.constants.IpVersionKey
+import com.music.vivi.utils.dataStore
+import androidx.media3.exoplayer.scheduler.Requirements
+import kotlinx.coroutines.flow.distinctUntilChanged
 import com.music.innertube.models.IpVersion
 import com.music.innertube.models.YouTubeClient
 import com.music.innertube.strategy.ContentHints
@@ -316,11 +320,43 @@ constructor(
             result[cursor.download.request.id] = cursor.download
         }
         downloads.value = result
+
+        scope.launch {
+            appContext.dataStore.data.map { it[DisableMobileDataKey] ?: false }.distinctUntilChanged().collect { disableMobileData ->
+                downloadManager.requirements = if (disableMobileData) {
+                    Requirements(Requirements.NETWORK_UNMETERED)
+                } else {
+                    Requirements(Requirements.NETWORK)
+                }
+            }
+        }
     }
 
     fun getDownload(songId: String): Flow<Download?> = downloads.map { it[songId] }
 
     fun release() {
         scope.cancel()
+    }
+
+    companion object {
+        fun autoDownloadIfLiked(context: Context, song: SongEntity) {
+            if (!song.liked || song.id.isBlank()) return
+            CoroutineScope(Dispatchers.IO).launch {
+                val autoDownload = context.dataStore.get(com.music.vivi.constants.AutoDownloadOnLikeKey, false)
+                if (autoDownload) {
+                    val downloadRequest = androidx.media3.exoplayer.offline.DownloadRequest
+                        .Builder(song.id, song.id.toUri())
+                        .setCustomCacheKey(song.id)
+                        .setData(song.title.toByteArray())
+                        .build()
+                    androidx.media3.exoplayer.offline.DownloadService.sendAddDownload(
+                        context,
+                        ExoDownloadService::class.java,
+                        downloadRequest,
+                        false
+                    )
+                }
+            }
+        }
     }
 }

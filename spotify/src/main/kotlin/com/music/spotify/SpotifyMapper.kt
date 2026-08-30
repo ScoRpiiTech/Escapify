@@ -5,11 +5,11 @@ import com.music.spotify.models.SpotifyTrack
 
 object SpotifyMapper {
 
-    private val FEAT_PATTERN = Regex("\\(feat\\..*?\\)")
-    private val FT_PATTERN = Regex("\\(ft\\..*?\\)")
+    private val FEAT_PATTERN = Regex("\\((?:feat\\.|ft\\.|featuring|with|prod\\.).*?\\)", RegexOption.IGNORE_CASE)
+    private val FT_PATTERN = Regex("(?i)\\b(?:feat\\.|ft\\.|featuring)\\s+.*$")
     private val BRACKET_PATTERN = Regex("\\[.*?]")
-    private val REMASTER_PATTERN = Regex("\\(.*?remaster.*?\\)", RegexOption.IGNORE_CASE)
-    private val REMIX_PATTERN = Regex("\\(.*?remix.*?\\)", RegexOption.IGNORE_CASE)
+    private val REMASTER_PATTERN = Regex("\\(.*?remaster.*?\\)|-.*?(?:remaster|deluxe|edition|bonus|radio edit|single version).*?$", RegexOption.IGNORE_CASE)
+    private val EDITION_PATTERN = Regex("\\(.*?edition.*?\\)|\\(.*?deluxe.*?\\)|\\(.*?bonus track.*?\\)|\\(.*?live.*?\\)|\\(.*?official.*?\\)|\\(.*?video.*?\\)|\\(.*?audio.*?\\)", RegexOption.IGNORE_CASE)
     private val NON_ALNUM_PATTERN = Regex("[^a-z0-9\\s]")
     private val MULTI_SPACE_PATTERN = Regex("\\s+")
 
@@ -156,7 +156,7 @@ object SpotifyMapper {
             .replace(FT_PATTERN, "")
             .replace(BRACKET_PATTERN, "")
             .replace(REMASTER_PATTERN, "")
-            .replace(REMIX_PATTERN, "")
+            .replace(EDITION_PATTERN, "")
             .replace(NON_ALNUM_PATTERN, "")
             .replace(MULTI_SPACE_PATTERN, " ")
             .trim()

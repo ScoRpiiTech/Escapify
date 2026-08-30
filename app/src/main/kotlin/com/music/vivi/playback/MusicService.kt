@@ -84,6 +84,7 @@ import com.music.vivi.constants.AudioNormalizationKey
 import com.music.vivi.constants.AudioOffload
 import com.music.vivi.constants.AudioQualityKey
 import com.music.vivi.constants.AutoDownloadOnLikeKey
+import com.music.vivi.constants.DisableMobileDataKey
 import com.music.vivi.constants.AutoLoadMoreKey
 import com.music.vivi.constants.AutoSkipNextOnErrorKey
 import com.music.vivi.constants.CrossfadeDurationKey
@@ -1756,22 +1757,7 @@ class MusicService :
                     update(song)
                     syncUtils.likeSong(song)
 
-                    // Check if auto-download on like is enabled and the song is now liked
-                    if (dataStore.get(AutoDownloadOnLikeKey, false) && song.liked) {
-                        // Trigger download for the liked song
-                        val downloadRequest =
-                            androidx.media3.exoplayer.offline.DownloadRequest
-                                .Builder(song.id, song.id.toUri())
-                                .setCustomCacheKey(song.id)
-                                .setData(song.title.toByteArray())
-                                .build()
-                        androidx.media3.exoplayer.offline.DownloadService.sendAddDownload(
-                            this@MusicService,
-                            ExoDownloadService::class.java,
-                            downloadRequest,
-                            false
-                        )
-                    }
+                    DownloadUtil.autoDownloadIfLiked(this@MusicService, song)
                 }
                 currentMediaMetadata.value = player.currentMetadata
             }
@@ -2953,6 +2939,23 @@ class MusicService :
 
             val cacheGeneration = songUrlCache.generation(mediaId)
             Timber.tag("MusicService").i("FETCHING STREAM: $mediaId | quality=$audioQuality")
+
+            val isMobileDataDisabled = runBlocking(Dispatchers.IO) {
+                dataStore.get(DisableMobileDataKey, false)
+            }
+            if (isMobileDataDisabled && connectivityManager.isActiveNetworkMetered) {
+                val cachedInDownload = downloadCache.getCachedBytes(mediaId, dataSpec.position, 1L)
+                val cachedInPlayer = playerCache.getCachedBytes(mediaId, dataSpec.position, 1L)
+                if (cachedInDownload <= 0 && cachedInPlayer <= 0) {
+                    Timber.tag("MusicService").w("Mobile data streaming blocked because DisableMobileData mode is active")
+                    throw PlaybackException(
+                        getString(R.string.mobile_data_disabled_notice),
+                        null,
+                        PlaybackException.ERROR_CODE_IO_NETWORK_CONNECTION_FAILED
+                    )
+                }
+            }
+
             val playbackData = runBlocking(Dispatchers.IO) {
                 val song = database.getSongByIdBlocking(mediaId)?.song
                 YTPlayerUtils.playerResponseForPlayback(

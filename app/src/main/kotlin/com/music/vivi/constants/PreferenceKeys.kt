@@ -120,9 +120,11 @@ val IpVersionKey = stringPreferencesKey("ipVersion")
 enum class AudioQuality {
     AUTO,
     HIGH,
+    MEDIUM,
     LOW,
 }
 
+val DisableMobileDataKey = booleanPreferencesKey("disableMobileData")
 val AudioOffload = booleanPreferencesKey("enableOffload")
 
 // JioSaavn streaming

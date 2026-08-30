@@ -46,6 +46,7 @@ import com.music.vivi.constants.EnableSaavnStreamingKey
 import com.music.vivi.constants.SaavnAudioQuality
 import com.music.vivi.constants.SaavnAudioQualityKey
 import com.music.vivi.constants.AutoDownloadOnLikeKey
+import com.music.vivi.constants.DisableMobileDataKey
 import com.music.vivi.constants.CrossfadeDurationKey
 import com.music.vivi.constants.CrossfadeEnabledKey
 import com.music.vivi.constants.CrossfadeGaplessKey
@@ -143,6 +144,10 @@ fun PlayerSettings(
         AutoDownloadOnLikeKey,
         defaultValue = false
     )
+    val (disableMobileData, onDisableMobileDataChange) = rememberPreference(
+        DisableMobileDataKey,
+        defaultValue = false
+    )
     val (similarContentEnabled, similarContentEnabledChange) = rememberPreference(
         key = SimilarContent,
         defaultValue = true
@@ -212,9 +217,10 @@ fun PlayerSettings(
             values = AudioQuality.values().toList(),
             valueText = {
                 when (it) {
-                    AudioQuality.AUTO -> stringResource(R.string.audio_quality_auto)
-                    AudioQuality.HIGH -> stringResource(R.string.audio_quality_high)
-                    AudioQuality.LOW -> stringResource(R.string.audio_quality_low)
+                    AudioQuality.AUTO -> stringResource(R.string.audio_quality_auto_desc)
+                    AudioQuality.HIGH -> stringResource(R.string.audio_quality_high_desc)
+                    AudioQuality.MEDIUM -> stringResource(R.string.audio_quality_medium_desc)
+                    AudioQuality.LOW -> stringResource(R.string.audio_quality_low_desc)
                 }
             }
         )
@@ -271,9 +277,10 @@ fun PlayerSettings(
                     description = {
                         Text(
                             when (audioQuality) {
-                                AudioQuality.AUTO -> stringResource(R.string.audio_quality_auto)
-                                AudioQuality.HIGH -> stringResource(R.string.audio_quality_high)
-                                AudioQuality.LOW -> stringResource(R.string.audio_quality_low)
+                                AudioQuality.AUTO -> stringResource(R.string.audio_quality_auto_desc)
+                                AudioQuality.HIGH -> stringResource(R.string.audio_quality_high_desc)
+                                AudioQuality.MEDIUM -> stringResource(R.string.audio_quality_medium_desc)
+                                AudioQuality.LOW -> stringResource(R.string.audio_quality_low_desc)
                             }
                         )
                     },
@@ -641,6 +648,29 @@ fun PlayerSettings(
                         )
                     },
                     onClick = { onAutoDownloadOnLikeChange(!autoDownloadOnLike) },
+                    isExpressive = true,
+                    descriptionBelow = true
+                ),
+                Material3SettingsItem(
+                    icon = painterResource(R.drawable.cell_tower),
+                    title = { Text(stringResource(R.string.disable_mobile_data)) },
+                    description = { Text(stringResource(R.string.disable_mobile_data_desc)) },
+                    trailingContent = {
+                        Switch(
+                            checked = disableMobileData,
+                            onCheckedChange = onDisableMobileDataChange,
+                            thumbContent = {
+                                Icon(
+                                    painter = painterResource(
+                                        id = if (disableMobileData) R.drawable.check else R.drawable.close
+                                    ),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(SwitchDefaults.IconSize)
+                                )
+                            }
+                        )
+                    },
+                    onClick = { onDisableMobileDataChange(!disableMobileData) },
                     isExpressive = true,
                     descriptionBelow = true
                 ),

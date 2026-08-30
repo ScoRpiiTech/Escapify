@@ -812,15 +812,33 @@ object YTPlayerUtils {
     ): PlayerResponse.StreamingData.Format? {
         Timber.tag(logTag).d("Finding format with audioQuality: $audioQuality, network metered: ${connectivityManager.isActiveNetworkMetered}")
 
-        val format = playerResponse.streamingData?.adaptiveFormats
+        val audioFormats = playerResponse.streamingData?.adaptiveFormats
             ?.filter { it.isAudio && it.isOriginal }
-            ?.maxByOrNull {
-                it.bitrate * when (audioQuality) {
-                    AudioQuality.AUTO -> if (connectivityManager.isActiveNetworkMetered) -1 else 1
-                    AudioQuality.HIGH -> 1
-                    AudioQuality.LOW -> -1
-                } + (if (it.mimeType.startsWith("audio/webm")) 10240 else 0) // prefer opus stream
+            .orEmpty()
+
+        if (audioFormats.isEmpty()) {
+            Timber.tag(logTag).d("No suitable audio format found")
+            return null
+        }
+
+        val format = when (audioQuality) {
+            AudioQuality.HIGH -> {
+                audioFormats.maxByOrNull { it.bitrate + (if (it.mimeType.startsWith("audio/webm")) 10240 else 0) }
             }
+            AudioQuality.MEDIUM -> {
+                audioFormats.minByOrNull { kotlin.math.abs(it.bitrate - 128_000) }
+            }
+            AudioQuality.LOW -> {
+                audioFormats.minByOrNull { it.bitrate }
+            }
+            AudioQuality.AUTO -> {
+                if (connectivityManager.isActiveNetworkMetered) {
+                    audioFormats.minByOrNull { kotlin.math.abs(it.bitrate - 128_000) }
+                } else {
+                    audioFormats.maxByOrNull { it.bitrate + (if (it.mimeType.startsWith("audio/webm")) 10240 else 0) }
+                }
+            }
+        }
 
         if (format != null) {
             Timber.tag(logTag).d("Selected format: ${format.mimeType}, bitrate: ${format.bitrate}")

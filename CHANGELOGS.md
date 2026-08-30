@@ -75,6 +75,21 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Major Upgrade / Audio Bitrate Control, Strict Wi-Fi Only Mode, Auto-Download on Like, & Spotify Matching] - 2026-08-31
+- **Audio Bitrate Quality Engine**:
+  - Expanded `AudioQuality` enum to include `MEDIUM` (~128 kbps) alongside `AUTO`, `HIGH` (Opus ~160k / AAC ~256k), and `LOW` (Data Saver 48–64k).
+  - Enhanced `YTPlayerUtils.kt` `findFormat` with mathematical target bitrate matching for InnerTube adaptive audio streams.
+  - Updated UI dialogs, descriptive labels, player badges, and bottom sheets across `PlayerSettings.kt`, `AudioDeviceBottomSheet.kt`, and `Player.kt`.
+- **Strict Wi-Fi Only / Disable Mobile Data Mode**:
+  - Added `DisableMobileDataKey` preference toggle in `PlayerSettings.kt` under Playback & Network settings.
+  - Enforced `Requirements.NETWORK_UNMETERED` on `DownloadManager` in `DownloadUtil.kt` so downloads strictly run on Wi-Fi and pause on cellular data.
+  - Added streaming guard in `MusicService.kt` `createDataSourceFactory` to block uncached cellular streaming when active while keeping offline cached playback seamless.
+- **Universal Auto-Download on Like**:
+  - Added centralized `DownloadUtil.autoDownloadIfLiked(context, song)` helper.
+  - Connected auto-download triggers across `MusicService.kt`, `SongMenu.kt`, and `YouTubeSongMenu.kt` so liking a track from any UI screen automatically queues its background download.
+- **Spotify Matching Accuracy Upgrade**:
+  - Enhanced `SpotifyMapper.kt` title normalization to clean remastered, deluxe, edition, live, bonus track, and featuring tags, boosting YouTube search match precision.
+
 ### [Milestone / GitHub Remote Synchronization] - 2026-08-30
 - **Remote `custom-build` Live**: Successfully initialized, organized into clean modular commits, and published the `custom-build` branch to GitHub remote: [`https://github.com/ScoRpiiTech/Escapify/tree/custom-build`](https://github.com/ScoRpiiTech/Escapify/tree/custom-build).
 - **Repository Optimization**: Excluded heavy documentation images (`NEW-UI/`, 92MB) from the tracking tree, keeping the codebase repository lightweight (~37MB) and eliminating network HTTP timeouts.

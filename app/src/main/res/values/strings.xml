@@ -315,7 +315,17 @@
     <string name="ip_version_ipv6">Forced IPv6</string>
     <string name="audio_quality_auto">Auto</string>
     <string name="audio_quality_high">High</string>
+    <string name="audio_quality_medium">Medium</string>
     <string name="audio_quality_low">Low</string>
+    <string name="audio_quality_auto_desc">Auto (adapts to network)</string>
+    <string name="audio_quality_high_desc">High (Opus ~160 kbps / AAC ~256 kbps)</string>
+    <string name="audio_quality_medium_desc">Medium (~128 kbps)</string>
+    <string name="audio_quality_low_desc">Low (Data Saver ~48–64 kbps)</string>
+    <string name="disable_mobile_data">Disable Mobile Data (Wi-Fi Only)</string>
+    <string name="disable_mobile_data_desc">Only stream and download music when connected to Wi-Fi. Offline cached music remains playable on mobile data.</string>
+    <string name="mobile_data_disabled_notice">Streaming on mobile data is disabled in settings. Connect to Wi-Fi or play downloaded tracks.</string>
+    <string name="clear_streaming_cache">Clear Streaming Cache</string>
+    <string name="clear_streaming_cache_desc">Free temporary streaming cache while keeping your downloaded songs intact</string>
     <string name="queue">Queue</string>
     <string name="persistent_queue">Persistent queue</string>
     <string name="persistent_queue_desc">Restore your last queue when the app starts</string>
