@@ -195,7 +195,7 @@ fun SettingDialoge(
                                 text = if (isLoggedIn) {
                                     accountEmail.ifEmpty { "Logged In" }
                                 } else {
-                                    "vivimusictest@gmail.com"
+                                    "Not Signed In"
                                 },
                                 fontWeight = FontWeight.Light,
                                 color = onSecondaryColor,

@@ -143,6 +143,8 @@ fun AboutScreen(
             }
         }
         
+        /*
+        // Support / Donation Badges (can be re-enabled with custom links)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -152,7 +154,7 @@ fun AboutScreen(
         ) {
             // PayPal Badge
             Surface(
-                onClick = { uriHandler.safeOpenUri(context, "https://www.paypal.me/vividhpashokan") },
+                onClick = { uriHandler.safeOpenUri(context, "https://www.paypal.me/yourusername") },
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
                 modifier = Modifier.height(36.dp)
@@ -177,36 +179,9 @@ fun AboutScreen(
                 }
             }
 
-            // UPI Badge
-            Surface(
-                onClick = { uriHandler.safeOpenUri(context, "upi://pay?pa=vividhpashokan@axl&pn=Vividh P Ashokan") },
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
-                modifier = Modifier.height(36.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.currency_rupee_upi),
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "UPI",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-
             // Coffee Badge
             Surface(
-                onClick = { uriHandler.safeOpenUri(context, "https://ko-fi.com/vividhpashokan") },
+                onClick = { uriHandler.safeOpenUri(context, "https://ko-fi.com/yourusername") },
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.7f),
                 modifier = Modifier.height(36.dp)
@@ -231,6 +206,7 @@ fun AboutScreen(
                 }
             }
         }
+        */
 
         // Developer Section
         Material3SettingsGroup(
@@ -282,13 +258,6 @@ fun AboutScreen(
                     icon = painterResource(R.drawable.github),
                     title = { Text(stringResource(R.string.github_repository)) },
                     onClick = { uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify") },
-                    isExpressive = true,
-                    isExternalLink = true
-                ),
-                Material3SettingsItem(
-                    icon = painterResource(R.drawable.telegram), // add a telegram icon drawable
-                    title = { Text(stringResource(R.string.telegram_channel)) },
-                    onClick = { uriHandler.safeOpenUri(context, "https://t.me/vivimusicapp") },
                     isExpressive = true,
                     isExternalLink = true
                 )

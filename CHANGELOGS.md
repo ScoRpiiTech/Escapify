@@ -79,9 +79,12 @@ git push -f origin custom-build
 - **Welcome & Onboarding Screens**:
   - Rebranded welcome headers, permissions explainer, setup wizard, and features showcase to **Escapify**.
   - Updated developer profile, community links, and repository targets to **ScoRpiiTech/Escapify**.
+  - Cleaned up onboarding cards to focus exclusively on project starring and documentation.
 - **About & Settings Dialogs**:
   - Updated all internal labels, title badges, and dialog headers from "VIVI MUSIC" to **ESCAPIFY**.
   - Synchronized developer information and repo links with **ScoRpiiTech / Escapify Team**.
+  - Cleanly hid upstream donation badges (PayPal, UPI, Ko-fi) and Telegram links so they can be re-enabled with custom links in the future.
+  - Replaced anonymous user placeholder email with "Not Signed In".
 - **Audio & Integration Strings**:
   - Rebranded equalizers, Discord Rich Presence, and Last.fm integrations to **Escapify**.
 

@@ -612,7 +612,7 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                             iconTint = Color(0xFF8d6e00),
                             title = "Star on GitHub",
                             description = "Help us reach more people by starring our repository.",
-                            shape = topCardShape,
+                            shape = RoundedCornerShape(20.dp),
                             control = {
                                 Icon(
                                     imageVector = Icons.Rounded.ChevronRight,
@@ -625,8 +625,9 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                             }
                         )
 
+                        // In future: Support / Community cards can be re-enabled below
+                        /*
                         Spacer(modifier = Modifier.height(2.dp))
-
                         PermissionCard(
                             icon = painterResource(com.music.vivi.R.drawable.telegram),
                             iconColor = Color(0xFF67d4ff),
@@ -642,51 +643,10 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                                 )
                             },
                             onClick = {
-                                uriHandler.safeOpenUri(context, "https://t.me/vivimusicapp")
+                                uriHandler.safeOpenUri(context, "https://t.me/escapify")
                             }
                         )
-
-                        Spacer(modifier = Modifier.height(2.dp))
-
-                        PermissionCard(
-                            icon = painterResource(com.music.vivi.R.drawable.currency_rupee_upi),
-                            iconColor = Color(0xFFffb4ab),
-                            iconTint = Color(0xFF690005),
-                            title = "Support via UPI",
-                            description = "Directly support development via UPI.",
-                            shape = middleCardShape,
-                            control = {
-                                Icon(
-                                    imageVector = Icons.Rounded.ChevronRight,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                            onClick = {
-                                uriHandler.safeOpenUri(context, "upi://pay?pa=vividhpashokan@axl&pn=Vividh P Ashokan")
-                            }
-                        )
-
-                        Spacer(modifier = Modifier.height(2.dp))
-
-                        PermissionCard(
-                            icon = painterResource(com.music.vivi.R.drawable.buymeacoffee),
-                            iconColor = Color(0xFFffb4ab),
-                            iconTint = Color(0xFF690005),
-                            title = "Buy Me a Coffee",
-                            description = "Support the project through Ko-fi.",
-                            shape = bottomCardShape,
-                            control = {
-                                Icon(
-                                    imageVector = Icons.Rounded.ChevronRight,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                            onClick = {
-                                uriHandler.safeOpenUri(context, "https://ko-fi.com/vividhpashokan")
-                            }
-                        )
+                        */
 
                         Spacer(modifier = Modifier.height(100.dp))
                     }
