@@ -75,6 +75,15 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Configuration & DevOps / Dedicated Package ID, In-App Updater & CI/CD Automation] - 2026-08-31
+- **Application Package Identity**:
+  - Changed `applicationId` to `com.scorpiitech.escapify` in `app/build.gradle.kts`, giving Escapify a standalone application identity that installs cleanly alongside other music players without signature or package conflicts.
+- **In-App Auto-Updater Endpoints**:
+  - Switched update checker, changelog viewer, and commit inspector endpoints from upstream to `ScoRpiiTech/Escapify` (`https://api.github.com/repos/ScoRpiiTech/Escapify/releases`).
+  - Updated asset matching in `vivimusicupdater.kt` to resolve `Escapify.apk` and `Escapify-Universal.apk`.
+- **Automated GitHub Actions CI/CD**:
+  - Configured `.github/workflows/release.yml` and `build.yml` to automatically build, package, sign, and publish `Escapify.apk` to GitHub Releases on push/dispatch for the `custom-build` branch.
+
 ### [Feature / Download Health Integrity Scanner & Auto-Repair Engine] - 2026-08-31
 - **Integrity Validation & Truncation Detection**:
   - Built `DownloadUtil.scanDownloadsHealth` to inspect all downloaded tracks in Room DB against actual disk cache bytes in `DownloadCache`.

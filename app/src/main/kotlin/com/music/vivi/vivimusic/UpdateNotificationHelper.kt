@@ -38,9 +38,9 @@ object UpdateNotificationHelper {
 
         // Direct download URL format from vivimusicupdater - use the full tag (vX.X.X or bX.X.X) or nightly link
         val apkUrl = if (versionName.contains("nightly", ignoreCase = true)) {
-            "https://nightly.link/vivizzz007/vivi-music/workflows/nightly.yml/main/vivi-music-gms-nightly.zip"
+            "https://nightly.link/ScoRpiiTech/Escapify/workflows/build-and-release.yml/custom-build/Escapify-Universal.zip"
         } else {
-            "https://github.com/vivizzz007/vivi-music/releases/download/$versionName/vivi.apk"
+            "https://github.com/ScoRpiiTech/Escapify/releases/download/$versionName/Escapify.apk"
         }
         val intent = Intent(Intent.ACTION_VIEW, apkUrl.toUri())
 

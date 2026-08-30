@@ -338,7 +338,7 @@ fun UpdateScreen(navController: NavHostController) {
                                                 ContextCompat.startActivity(context, installIntent, null)
                                             }
                                         } else {
-                                            val urlToDownload = currentStatus.apkUrl ?: "https://github.com/vivizzz007/vivi-music/releases/download/${currentStatus.version}/vivi.apk"
+                                            val urlToDownload = currentStatus.apkUrl ?: "https://github.com/ScoRpiiTech/Escapify/releases/download/${currentStatus.version}/Escapify.apk"
                                             val downloadRequest = OneTimeWorkRequestBuilder<UpdateDownloadWorker>()
                                                 .setInputData(workDataOf("apk_url" to urlToDownload, "version" to currentStatus.version, "file_size" to currentStatus.size))
                                                 .addTag("update_download")
@@ -743,7 +743,7 @@ suspend fun checkForUpdate(
 ) {
     withContext(Dispatchers.IO) {
         try {
-            val url = URL("https://api.github.com/repos/vivizzz007/vivi-music/releases")
+            val url = URL("https://api.github.com/repos/ScoRpiiTech/Escapify/releases")
             val json = url.openStream().bufferedReader().use { it.readText() }
             val releases = JSONArray(json)
             
@@ -756,7 +756,7 @@ suspend fun checkForUpdate(
 
             if (betaEnabled) {
                 try {
-                    val nightlyUrl = URL("https://api.github.com/repos/vivizzz007/vivi-music/actions/workflows/nightly.yml/runs?status=success&per_page=100")
+                    val nightlyUrl = URL("https://api.github.com/repos/ScoRpiiTech/Escapify/actions/workflows/build-and-release.yml/runs?status=success&per_page=100")
                     val nightlyJson = nightlyUrl.openStream().bufferedReader().use { it.readText() }
                     val nightlyData = JSONObject(nightlyJson)
                     val runs = nightlyData.optJSONArray("workflow_runs")
@@ -799,40 +799,41 @@ suspend fun checkForUpdate(
                                     i < 15
                                 }
                                 if (shouldInclude) {
-                                    val headCommit = run.optJSONObject("head_commit")
-                                    val commitMessage = headCommit?.optString("message")
-                                    if (!commitMessage.isNullOrBlank()) {
-                                        val subjectLine = commitMessage.lineSequence().firstOrNull { it.isNotBlank() } ?: commitMessage
-                                        nightlyChangelog.add("r$rNum: $subjectLine")
+                                    val commitMessage = run.optString("display_title", "").takeIf { it.isNotEmpty() }
+                                        ?: run.optJSONObject("head_commit")?.optString("message", "")
+                                        ?: ""
+                                    if (commitMessage.isNotBlank()) {
+                                        val firstLine = commitMessage.lines().first().trim()
+                                        if (firstLine.isNotEmpty() && !nightlyChangelog.contains(firstLine)) {
+                                            nightlyChangelog.add(firstLine)
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 } catch (e: Exception) {
-                    Log.e("UpdateCheck", "Error checking nightly updates: ${e.message}", e)
+                    // Fall through to regular release check
                 }
             }
 
             if (isNightlyUpdate && nightlyRunObject != null) {
                 val runNumber = nightlyRunObject.getInt("run_number")
                 val runUpdatedAt = nightlyRunObject.getString("updated_at")
-                val displayTag = "nightly-r$runNumber"
+                val displayTag = "Nightly #$runNumber"
                 
                 val changelogList = mutableListOf<ChangelogSection>()
-                if (nightlyChangelog.isEmpty()) {
-                    val headCommit = nightlyRunObject.optJSONObject("head_commit")
-                    val commitMessage = headCommit?.optString("message") ?: "New features and bug fixes"
-                    val subjectLine = commitMessage.lineSequence().firstOrNull { it.isNotBlank() } ?: commitMessage
-                    nightlyChangelog.add("r$runNumber: $subjectLine")
+                if (nightlyChangelog.isNotEmpty()) {
+                    changelogList.add(ChangelogSection("Recent Changes", nightlyChangelog))
+                } else {
+                    changelogList.add(ChangelogSection("Recent Changes", listOf("Automated build from latest commits.")))
                 }
-                changelogList.add(ChangelogSection(context.getString(R.string.changelog), nightlyChangelog))
                 
                 val formattedReleaseDate = formatGitHubDate(runUpdatedAt)
-                val apkDownloadUrl = "https://nightly.link/vivizzz007/vivi-music/workflows/nightly.yml/main/vivi-music-gms-nightly.zip"
+                val apkDownloadUrl = "https://nightly.link/ScoRpiiTech/Escapify/workflows/build-and-release.yml/custom-build/Escapify-Universal.zip"
                 
                 withContext(Dispatchers.Main) {
-                    onSuccess(displayTag, true, changelogList, "~30", formattedReleaseDate, "Bleeding-edge nightly build from main branch.", null, apkDownloadUrl)
+                    onSuccess(displayTag, true, changelogList, "~30", formattedReleaseDate, "Bleeding-edge nightly build from custom-build branch.", null, apkDownloadUrl)
                 }
                 return@withContext
             }
@@ -878,21 +879,13 @@ suspend fun checkForUpdate(
                 val isDifferentVersion = currentClean != targetClean
                 
                 var shouldShow = isNewer
-                if (!shouldShow && !betaEnabled) {
-                    // Logic: If I'm on a Beta (b5.0.7) and latest stable is v5.0.6, 
-                    // and I just turned OFF beta, I want to see v5.0.6.
-                    if (currentIsBeta && targetIsStable) {
-                        shouldShow = true
-                    } else if (isDifferentVersion && targetIsStable) {
-                        // Also show if current is a newer unofficial stable (e.g. built locally as 5.0.7)
-                        // but user wants the official stable 5.0.6.
-                        shouldShow = true
-                    }
+                if (!betaEnabled && currentIsBeta && targetIsStable && isDifferentVersion) {
+                    shouldShow = true
                 }
 
                 if (shouldShow) {
-                    val tagWithPrefix = targetRelease.getString("tag_name")
-                    val displayTag = tagWithPrefix
+                    val displayTag = targetTagName
+                    val tagWithPrefix = if (targetTagName.startsWith("v") || targetTagName.startsWith("b")) targetTagName else "v$targetTagName"
 
                     // FETCH CHANGELOG.JSON FROM RELEASE ASSETS
                     val changelogList = mutableListOf<ChangelogSection>()
@@ -900,7 +893,7 @@ suspend fun checkForUpdate(
                     var imageUrl: String? = null
                     try {
                         val changelogUrl =
-                            URL("https://github.com/vivizzz007/vivi-music/releases/download/$tagWithPrefix/changelog.json")
+                            URL("https://github.com/ScoRpiiTech/Escapify/releases/download/$tagWithPrefix/changelog.json")
                         val changelogJson = changelogUrl.openStream().bufferedReader().use { it.readText() }
                         val changelogData = JSONObject(changelogJson)
 
@@ -934,11 +927,13 @@ suspend fun checkForUpdate(
                     for (j in 0 until assets.length()) {
                         val asset = assets.getJSONObject(j)
                         val assetName = asset.getString("name")
-                        if (assetName == "vivi.apk") {
+                        if (assetName.endsWith(".apk", ignoreCase = true)) {
                             val apkSizeInBytes = asset.getLong("size")
                             apkSizeInMB = String.format("%.1f", apkSizeInBytes / (1024.0 * 1024.0))
                             apkDownloadUrl = asset.getString("browser_download_url")
-                            break
+                            if (assetName.contains("escapify", ignoreCase = true) || assetName.contains("universal", ignoreCase = true)) {
+                                break
+                            }
                         }
                     }
 

@@ -370,7 +370,7 @@ fun AccountSettingsScreen(
                         ),
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickable {
-                            uriHandler.safeOpenUri(context, "https://github.com/vivizzz007/vivi-music/issues")
+                            uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify/issues")
                         }
                     )
                 }

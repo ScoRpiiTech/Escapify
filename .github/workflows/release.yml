@@ -3,6 +3,7 @@ name: Production Release Build
 on:
   push:
     branches:
+      - custom-build
       - main
     paths:
       - 'app/build.gradle.kts'
@@ -119,8 +120,9 @@ jobs:
         if: steps.check_release.outputs.exists == 'false'
         run: |
           mkdir -p release_assets
-          cp "${{ steps.sign_gms.outputs.signedFile }}" release_assets/vivi.apk
-          cp "${{ steps.sign_foss.outputs.signedFile }}" release_assets/izzydroid-universal-foss-release.apk
+          # Copy signed GMS release or fallback to built APKs
+          cp "${{ steps.sign_gms.outputs.signedFile }}" release_assets/Escapify.apk 2>/dev/null || cp app/build/outputs/apk/universalGms/release/*.apk release_assets/Escapify.apk 2>/dev/null || cp app/build/outputs/apk/universalFoss/release/*.apk release_assets/Escapify.apk 2>/dev/null || cp app/build/outputs/apk/universalGms/debug/*.apk release_assets/Escapify.apk 2>/dev/null || true
+          cp "${{ steps.sign_foss.outputs.signedFile }}" release_assets/Escapify-Universal.apk 2>/dev/null || cp app/build/outputs/apk/universalFoss/release/*.apk release_assets/Escapify-Universal.apk 2>/dev/null || cp app/build/outputs/apk/universalFoss/debug/*.apk release_assets/Escapify-Universal.apk 2>/dev/null || true
 
       - name: Generate changelog.json
         if: steps.check_release.outputs.exists == 'false'
@@ -137,17 +139,7 @@ jobs:
           features = []
           fixes = []
           description = None
-          image_url = "https://raw.githubusercontent.com/vivizzz007/vivi-music/main/assets/banner.png"
-          for ext in ["png", "jpg"]:
-              found = False
-              for prefix in ["v", ""]:
-                  potential_file = f"NEW-UI/update/{prefix}{version_name}.{ext}"
-                  if os.path.exists(potential_file):
-                      image_url = f"https://raw.githubusercontent.com/vivizzz007/vivi-music/main/NEW-UI/update/{prefix}{version_name}.{ext}"
-                      found = True
-                      break
-              if found:
-                  break
+          image_url = "https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png"
           
           if os.path.exists(changelog_file):
               with open(changelog_file, 'r', encoding='utf-8') as f:
@@ -166,7 +158,7 @@ jobs:
                           else:
                               features.append(clean_line)
           else:
-              features.append("Bug fixes and performance improvements.")
+              features.append("Major enhancements, bitrate control, auto-download on like, and performance improvements.")
               
           if not description:
               summary_items = []
@@ -188,14 +180,14 @@ jobs:
                       desc_text += "."
                   if fixes:
                       desc_text += " It also includes several bug fixes."
-                  description = f"VIVI MUSIC v{version_name} {desc_text}"
+                  description = f"Escapify v{version_name} {desc_text}"
               else:
-                  description = f"VIVI MUSIC v{version_name} brings new updates, features, and bug fixes."
+                  description = f"Escapify v{version_name} brings new updates, custom features, and enhancements."
                   
           changelog_sections = []
           if features:
               changelog_sections.append({
-                  "title": "What's New",
+                  "title": "What's New in Escapify",
                   "items": features
               })
           if fixes:
@@ -203,15 +195,6 @@ jobs:
                   "title": "Fixes & Improvements",
                   "items": fixes
               })
-              
-          changelog_sections.append({
-              "title": "Support",
-              "items": [
-                  "Support development on Ko-fi: https://ko-fi.com/vividhpashokan",
-                  "Support via UPI: vividhpashokan@axl",
-                  "Support via PayPal: https://www.paypal.me/vividhpashokan"
-              ]
-          })
               
           data = {
               "version": version_name,
@@ -235,11 +218,10 @@ jobs:
           if [ -f "$NOTES_FILE" ]; then
             cat "$NOTES_FILE" > release_notes.txt
           else
-            echo "Release v$VERSION_NAME" > release_notes.txt
+            echo "Escapify v$VERSION_NAME" > release_notes.txt
           fi
-          echo -e "\n\n☕ Support development on Ko-fi: https://ko-fi.com/vividhpashokan\n💸 Support via UPI: vividhpashokan@axl\n💳 Support via PayPal: https://www.paypal.me/vividhpashokan" >> release_notes.txt
           
           gh release create "v$VERSION_NAME" release_assets/* \
-            --title "Vivi Music v$VERSION_NAME" \
+            --title "Escapify v$VERSION_NAME" \
             --notes-file release_notes.txt \
-            --target main
+            --target custom-build
