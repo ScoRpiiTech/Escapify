@@ -75,7 +75,7 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
-### [Rebranding & UI / Complete In-App Escapify Identity Overhaul (v6.0.6)] - 2026-08-31
+### [Rebranding & UI / Complete In-App Escapify Identity Overhaul (v6.0.7)] - 2026-08-31
 - **Welcome & Onboarding Screens**:
   - Rebranded welcome headers, permissions explainer, setup wizard, and features showcase to **Escapify**.
   - Updated developer profile, community links, and repository targets to **ScoRpiiTech/Escapify**.
