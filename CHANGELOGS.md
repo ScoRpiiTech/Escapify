@@ -75,6 +75,11 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Milestone / GitHub Remote Synchronization] - 2026-08-30
+- **Remote `custom-build` Live**: Successfully initialized, organized into clean modular commits, and published the `custom-build` branch to GitHub remote: [`https://github.com/ScoRpiiTech/Escapify/tree/custom-build`](https://github.com/ScoRpiiTech/Escapify/tree/custom-build).
+- **Repository Optimization**: Excluded heavy documentation images (`NEW-UI/`, 92MB) from the tracking tree, keeping the codebase repository lightweight (~37MB) and eliminating network HTTP timeouts.
+- **Upstream Tracking**: Verified dual-remote configuration with `origin` (personal fork) and `upstream` (official vivi-music releases).
+
 ### [Overhaul / Download & Offline Playback Engine] - 2026-08-30
 - **Unbounded Stream Resolution**: Removed hardcoded 10MB (`10_000_000`) range restriction on YouTube stream requests in `DownloadUtil.kt`, preventing cutoffs on high-bitrate, long, or unsegmented tracks.
 - **Batch Rate-Limit Resilience**: Added automatic retry mechanism with exponential backoff (up to 3 attempts) for InnerTube playback stream resolution during bulk playlist/album downloads.
@@ -93,3 +98,4 @@ git push -f origin custom-build
 ## 🛡️ Privacy & Sensitive Information Protection
 - All private configuration files (`.agent/`, `.claude/`, `local.properties`, `.env`, `*.keystore`, `*.jks`, `secrets.*`) are strictly excluded from version control.
 - Never commit private signing keys or credentials.
+
