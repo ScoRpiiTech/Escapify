@@ -356,7 +356,7 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                     val welcomeString = stringResource(id = com.music.vivi.R.string.welcome_to_vivi)
                     val annotatedWelcome = remember(welcomeString, primaryColor) {
                         buildAnnotatedString {
-                            val target = "Vivi"
+                            val target = "Escapify"
                             val index = welcomeString.indexOf(target)
                             if (index != -1) {
                                 val prefix = welcomeString.substring(0, index).trim()
@@ -417,7 +417,7 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                         onClick = {},
                         label = {
                             Text(
-                                text = "By vividh p ashokan",
+                                text = "By ScoRpiiTech",
                                 fontFamily = GoogleSansFlex
                             )
                         },
@@ -592,7 +592,7 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        text = "ViviMusic is open-source and depends on community support to grow. Your help makes a difference!",
+                        text = "Escapify is open-source and dedicated to delivering a seamless, ad-free music experience.",
                         style = MaterialTheme.typography.bodyLarge.copy(
                             fontFamily = GoogleSansFlex
                         ),
@@ -621,7 +621,7 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                                 )
                             },
                             onClick = {
-                                uriHandler.safeOpenUri(context, "https://github.com/vivizzz007/vivi-music")
+                                uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify")
                             }
                         )
 
@@ -1000,7 +1000,7 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                         color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
-                        text = "ViviMusic…",
+                        text = "Escapify…",
                         fontFamily = GoogleSansFlex,
                         fontWeight = FontWeight.Bold,
                         fontSize = 48.sp,

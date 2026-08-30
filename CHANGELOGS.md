@@ -75,6 +75,16 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Rebranding & UI / Complete In-App Escapify Identity Overhaul (v6.0.6)] - 2026-08-31
+- **Welcome & Onboarding Screens**:
+  - Rebranded welcome headers, permissions explainer, setup wizard, and features showcase to **Escapify**.
+  - Updated developer profile, community links, and repository targets to **ScoRpiiTech/Escapify**.
+- **About & Settings Dialogs**:
+  - Updated all internal labels, title badges, and dialog headers from "VIVI MUSIC" to **ESCAPIFY**.
+  - Synchronized developer information and repo links with **ScoRpiiTech / Escapify Team**.
+- **Audio & Integration Strings**:
+  - Rebranded equalizers, Discord Rich Presence, and Last.fm integrations to **Escapify**.
+
 ### [Branding & UI / New Minimalist Spotify-Alternative App Icon] - 2026-08-31
 - **Modern Minimalist App Icon**:
   - Replaced legacy app icon with a bespoke minimalist Spotify-alternative visual identity: an emerald green emblem featuring an acoustic sound spiral "e".

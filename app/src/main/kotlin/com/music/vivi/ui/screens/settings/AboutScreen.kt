@@ -242,7 +242,7 @@ fun AboutScreen(
                     description = { Text(stringResource(R.string.app_developer), color = MaterialTheme.colorScheme.primary) },
                     tintIcon = false,
                     iconShape = cookieShape,
-                    onClick = { uriHandler.safeOpenUri(context, "https://github.com/vivizzz007") },
+                    onClick = { uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify") },
                     isExpressive = true,
                     descriptionBelow = true,
                     isExternalLink = true
@@ -250,7 +250,7 @@ fun AboutScreen(
                 Material3SettingsItem(
                     icon = painterResource(R.drawable.web_link),
                     title = { Text(stringResource(R.string.website)) },
-                    onClick = { uriHandler.safeOpenUri(context, "https://vivimusic.mkmdevilmi.workers.dev/") },
+                    onClick = { uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify") },
                     isExpressive = true,
                     isExternalLink = true
                 )
