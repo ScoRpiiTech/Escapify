@@ -75,6 +75,18 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Feature / Download Health Integrity Scanner & Auto-Repair Engine] - 2026-08-31
+- **Integrity Validation & Truncation Detection**:
+  - Built `DownloadUtil.scanDownloadsHealth` to inspect all downloaded tracks in Room DB against actual disk cache bytes in `DownloadCache`.
+  - Automatically identifies tracks with missing bytes, corrupted streams, or legacy 10MB range cutoffs (`9.95MB–10.05MB`).
+- **1-Tap "Verify & Repair Downloads" in Storage Settings**:
+  - Added dedicated repair tool in `StorageSettings.kt` under the Downloads storage group.
+  - Scans library and presents a summary of healthy vs incomplete tracks with a single-tap **"Repair & Re-download"** button.
+- **Auto-Repair Pipeline**:
+  - `DownloadUtil.repairIncompleteDownloads` automatically clears corrupt partial blocks, resets DB download markers, and dispatches fresh unbounded download requests to retrieve complete, pristine audio files.
+- **Individual Song Re-download Action**:
+  - Added **"Re-download / Repair"** action in `SongMenu.kt` and `YouTubeSongMenu.kt` to re-fetch any downloaded track with one tap.
+
 ### [Major Upgrade / Audio Bitrate Control, Strict Wi-Fi Only Mode, Auto-Download on Like, & Spotify Matching] - 2026-08-31
 - **Audio Bitrate Quality Engine**:
   - Expanded `AudioQuality` enum to include `MEDIUM` (~128 kbps) alongside `AUTO`, `HIGH` (Opus ~160k / AAC ~256k), and `LOW` (Data Saver 48–64k).

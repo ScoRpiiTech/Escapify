@@ -48,6 +48,7 @@ import com.music.vivi.LocalDatabase
 import com.music.vivi.LocalPlayerAwareWindowInsets
 import com.music.vivi.LocalPlayerConnection
 import com.music.vivi.R
+import com.music.vivi.playback.DownloadUtil
 import com.music.vivi.constants.MaxImageCacheSizeKey
 import com.music.vivi.constants.MaxSongCacheSizeKey
 import com.music.vivi.extensions.tryOrNull
@@ -95,6 +96,11 @@ fun StorageSettings(
     var clearCacheDialog by remember { mutableStateOf(false) }
     var clearImageCacheDialog by remember { mutableStateOf(false) }
     android.util.Log.d("StorageSettings", "Recomposed: clearImageCacheDialog = $clearImageCacheDialog")
+
+    // State for download verification & repair
+    var isScanningDownloads by remember { mutableStateOf(false) }
+    var scanReport by remember { mutableStateOf<DownloadUtil.DownloadScanReport?>(null) }
+    var showScanReportDialog by remember { mutableStateOf(false) }
 
     // State for the confirmation dialog
     var showCacheWarningDialog by remember { mutableStateOf(false) }
@@ -162,6 +168,51 @@ fun StorageSettings(
             delay(500)
             downloadCacheSize = tryOrNull { downloadCache.cacheSpace } ?: 0
         }
+    }
+
+    if (showScanReportDialog && scanReport != null) {
+        val report = scanReport!!
+        AlertDialog(
+            onDismissRequest = { showScanReportDialog = false },
+            title = { Text(stringResource(R.string.verify_repair_downloads)) },
+            text = {
+                if (report.incompleteSongs.isEmpty()) {
+                    Text(stringResource(R.string.scan_downloads_all_valid, report.totalScanned))
+                } else {
+                    Text(stringResource(R.string.scan_downloads_issues_found, report.incompleteSongs.size, report.totalScanned))
+                }
+            },
+            confirmButton = {
+                if (report.incompleteSongs.isNotEmpty()) {
+                    TextButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                DownloadUtil.repairIncompleteDownloads(
+                                    context,
+                                    database,
+                                    downloadCache,
+                                    report.incompleteSongs
+                                )
+                            }
+                            showScanReportDialog = false
+                        }
+                    ) {
+                        Text(stringResource(R.string.repair_now))
+                    }
+                } else {
+                    TextButton(onClick = { showScanReportDialog = false }) {
+                        Text(stringResource(android.R.string.ok))
+                    }
+                }
+            },
+            dismissButton = {
+                if (report.incompleteSongs.isNotEmpty()) {
+                    TextButton(onClick = { showScanReportDialog = false }) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            }
+        )
     }
 
     if (clearDownloads) {
@@ -300,6 +351,29 @@ fun StorageSettings(
                         Text(text = formatFileSize(downloadCacheSize))
                     },
                     isExpressive = true
+                ),
+                Material3SettingsItem(
+                    icon = painterResource(R.drawable.download_done),
+                    title = { Text(stringResource(R.string.verify_repair_downloads)) },
+                    description = {
+                        Text(
+                            if (isScanningDownloads) stringResource(R.string.scan_downloads_running)
+                            else stringResource(R.string.verify_repair_downloads_desc)
+                        )
+                    },
+                    onClick = {
+                        if (!isScanningDownloads) {
+                            isScanningDownloads = true
+                            coroutineScope.launch {
+                                val report = DownloadUtil.scanDownloadsHealth(database, downloadCache)
+                                scanReport = report
+                                isScanningDownloads = false
+                                showScanReportDialog = true
+                            }
+                        }
+                    },
+                    isExpressive = true,
+                    descriptionBelow = true
                 ),
                 Material3SettingsItem(
                     icon = painterResource(R.drawable.clear_all),

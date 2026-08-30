@@ -633,78 +633,104 @@ fun SongMenu(
         item {
             Material3MenuGroup(
                 expressive = true,
-                items = listOf(
+                items = buildList {
                     when (download?.state) {
                         Download.STATE_COMPLETED -> {
-                            Material3MenuItemData(
-                                title = {
-                                    Text(
-                                        text = stringResource(R.string.remove_download)
-                                    )
-                                },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.offline),
-                                        contentDescription = null
-                                    )
-                                },
-                                onClick = {
-                                    DownloadService.sendRemoveDownload(
-                                        context,
-                                        ExoDownloadService::class.java,
-                                        song.id,
-                                        false,
-                                    )
-                                }
+                            add(
+                                Material3MenuItemData(
+                                    title = { Text(text = stringResource(R.string.redownload_song)) },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.refresh),
+                                            contentDescription = null
+                                        )
+                                    },
+                                    onClick = {
+                                        onDismiss()
+                                        DownloadUtil.redownloadSong(
+                                            context,
+                                            database,
+                                            playerConnection.service.downloadCache,
+                                            song.song
+                                        )
+                                    }
+                                )
+                            )
+                            add(
+                                Material3MenuItemData(
+                                    title = {
+                                        Text(
+                                            text = stringResource(R.string.remove_download)
+                                        )
+                                    },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.offline),
+                                            contentDescription = null
+                                        )
+                                    },
+                                    onClick = {
+                                        DownloadService.sendRemoveDownload(
+                                            context,
+                                            ExoDownloadService::class.java,
+                                            song.id,
+                                            false,
+                                        )
+                                    }
+                                )
                             )
                         }
                         Download.STATE_QUEUED, Download.STATE_DOWNLOADING -> {
-                            Material3MenuItemData(
-                                title = { Text(text = stringResource(R.string.downloading)) },
-                                icon = {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(24.dp),
-                                        strokeWidth = 2.dp
-                                    )
-                                },
-                                onClick = {
-                                    DownloadService.sendRemoveDownload(
-                                        context,
-                                        ExoDownloadService::class.java,
-                                        song.id,
-                                        false,
-                                    )
-                                }
+                            add(
+                                Material3MenuItemData(
+                                    title = { Text(text = stringResource(R.string.downloading)) },
+                                    icon = {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.size(24.dp),
+                                            strokeWidth = 2.dp
+                                        )
+                                    },
+                                    onClick = {
+                                        DownloadService.sendRemoveDownload(
+                                            context,
+                                            ExoDownloadService::class.java,
+                                            song.id,
+                                            false,
+                                        )
+                                    }
+                                )
                             )
                         }
                         else -> {
-                            Material3MenuItemData(
-                                title = { Text(text = stringResource(R.string.action_download)) },
-                                description = { Text(text = stringResource(R.string.download_desc)) },
-                                icon = {
-                                    Icon(
-                                        painter = painterResource(R.drawable.download),
-                                        contentDescription = null,
-                                    )
-                                },
-                                onClick = {
-                                    val downloadRequest =
-                                        DownloadRequest
-                                            .Builder(song.id, song.id.toUri())
-                                            .setCustomCacheKey(song.id)
-                                            .setData(song.song.title.toByteArray())
-                                            .build()
-                                    DownloadService.sendAddDownload(
-                                        context,
-                                        ExoDownloadService::class.java,
-                                        downloadRequest,
-                                        false,
-                                    )
-                                }
+                            add(
+                                Material3MenuItemData(
+                                    title = { Text(text = stringResource(R.string.action_download)) },
+                                    description = { Text(text = stringResource(R.string.download_desc)) },
+                                    icon = {
+                                        Icon(
+                                            painter = painterResource(R.drawable.download),
+                                            contentDescription = null,
+                                        )
+                                    },
+                                    onClick = {
+                                        val downloadRequest =
+                                            DownloadRequest
+                                                .Builder(song.id, song.id.toUri())
+                                                .setCustomCacheKey(song.id)
+                                                .setData(song.song.title.toByteArray())
+                                                .build()
+                                        DownloadService.sendAddDownload(
+                                            context,
+                                            ExoDownloadService::class.java,
+                                            downloadRequest,
+                                            false,
+                                        )
+                                    }
+                                )
                             )
                         }
                     }
-                )
+                }
             )
         }
 

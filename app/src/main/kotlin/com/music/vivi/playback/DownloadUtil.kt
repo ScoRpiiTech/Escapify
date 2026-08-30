@@ -29,6 +29,8 @@ import com.music.vivi.constants.IpVersionKey
 import com.music.vivi.utils.dataStore
 import androidx.media3.exoplayer.scheduler.Requirements
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import com.music.innertube.models.IpVersion
 import com.music.innertube.models.YouTubeClient
 import com.music.innertube.strategy.ContentHints
@@ -338,6 +340,12 @@ constructor(
         scope.cancel()
     }
 
+    data class DownloadScanReport(
+        val totalScanned: Int,
+        val healthyCount: Int,
+        val incompleteSongs: List<SongEntity>,
+    )
+
     companion object {
         fun autoDownloadIfLiked(context: Context, song: SongEntity) {
             if (!song.liked || song.id.isBlank()) return
@@ -356,6 +364,98 @@ constructor(
                         false
                     )
                 }
+            }
+        }
+
+        suspend fun scanDownloadsHealth(
+            database: MusicDatabase,
+            downloadCache: SimpleCache,
+        ): DownloadScanReport = withContext(Dispatchers.IO) {
+            val allDownloaded = try {
+                database.downloadedSongsByNameAsc().first()
+            } catch (e: Exception) {
+                emptyList()
+            }
+
+            val incomplete = mutableListOf<SongEntity>()
+            var healthy = 0
+
+            for (item in allDownloaded) {
+                val song = item.song
+                val cachedBytes = downloadCache.getCachedBytes(song.id, 0, Long.MAX_VALUE)
+                val durationSec = song.duration ?: 0
+                val expectedMinBytes = if (durationSec > 0) {
+                    (durationSec * 10_000L).coerceAtLeast(100_000L)
+                } else {
+                    100_000L
+                }
+
+                val isOldCutoff = cachedBytes in 9_950_000L..10_050_000L && durationSec > 200
+                val isInsufficient = cachedBytes < expectedMinBytes
+
+                if (isOldCutoff || isInsufficient) {
+                    incomplete.add(song)
+                } else {
+                    healthy++
+                }
+            }
+
+            DownloadScanReport(
+                totalScanned = allDownloaded.size,
+                healthyCount = healthy,
+                incompleteSongs = incomplete
+            )
+        }
+
+        suspend fun repairIncompleteDownloads(
+            context: Context,
+            database: MusicDatabase,
+            downloadCache: SimpleCache,
+            songsToRepair: List<SongEntity>,
+        ) = withContext(Dispatchers.IO) {
+            for (song in songsToRepair) {
+                try {
+                    downloadCache.removeResource(song.id)
+                } catch (_: Exception) {}
+                database.updateDownloadedInfo(song.id, false, null)
+
+                val downloadRequest = androidx.media3.exoplayer.offline.DownloadRequest
+                    .Builder(song.id, song.id.toUri())
+                    .setCustomCacheKey(song.id)
+                    .setData(song.title.toByteArray())
+                    .build()
+                androidx.media3.exoplayer.offline.DownloadService.sendAddDownload(
+                    context,
+                    ExoDownloadService::class.java,
+                    downloadRequest,
+                    false
+                )
+            }
+        }
+
+        fun redownloadSong(
+            context: Context,
+            database: MusicDatabase,
+            downloadCache: SimpleCache,
+            song: SongEntity,
+        ) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    downloadCache.removeResource(song.id)
+                } catch (_: Exception) {}
+                database.updateDownloadedInfo(song.id, false, null)
+
+                val downloadRequest = androidx.media3.exoplayer.offline.DownloadRequest
+                    .Builder(song.id, song.id.toUri())
+                    .setCustomCacheKey(song.id)
+                    .setData(song.title.toByteArray())
+                    .build()
+                androidx.media3.exoplayer.offline.DownloadService.sendAddDownload(
+                    context,
+                    ExoDownloadService::class.java,
+                    downloadRequest,
+                    false
+                )
             }
         }
     }
