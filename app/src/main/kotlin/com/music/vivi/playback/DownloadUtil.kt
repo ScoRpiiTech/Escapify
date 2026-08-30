@@ -27,6 +27,7 @@ import com.music.vivi.constants.AudioQualityKey
 import com.music.vivi.constants.DisableMobileDataKey
 import com.music.vivi.constants.IpVersionKey
 import com.music.vivi.utils.dataStore
+import com.music.vivi.utils.get
 import androidx.media3.exoplayer.scheduler.Requirements
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first

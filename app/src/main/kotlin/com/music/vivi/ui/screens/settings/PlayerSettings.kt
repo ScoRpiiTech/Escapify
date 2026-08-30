@@ -652,7 +652,7 @@ fun PlayerSettings(
                     descriptionBelow = true
                 ),
                 Material3SettingsItem(
-                    icon = painterResource(R.drawable.cell_tower),
+                    icon = painterResource(R.drawable.wifi_proxy),
                     title = { Text(stringResource(R.string.disable_mobile_data)) },
                     description = { Text(stringResource(R.string.disable_mobile_data_desc)) },
                     trailingContent = {

@@ -353,7 +353,7 @@ fun StorageSettings(
                     isExpressive = true
                 ),
                 Material3SettingsItem(
-                    icon = painterResource(R.drawable.download_done),
+                    icon = painterResource(R.drawable.refresh),
                     title = { Text(stringResource(R.string.verify_repair_downloads)) },
                     description = {
                         Text(
