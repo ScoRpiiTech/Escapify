@@ -75,6 +75,11 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Branding & UI / New Minimalist Spotify-Alternative App Icon] - 2026-08-31
+- **Modern Minimalist App Icon**:
+  - Replaced legacy app icon with a bespoke minimalist Spotify-alternative visual identity: an emerald green emblem featuring an acoustic sound spiral "e".
+  - Generated complete Android adaptive icon suite: `ic_launcher` (all densities `mdpi` to `xxxhdpi`), `ic_launcher_foreground`, `ic_launcher_background`, `ic_launcher_monochrome` (Material You themed icon support for Android 13/14/15), and 512x512 Store graphics.
+
 ### [Configuration & DevOps / Dedicated Package ID, In-App Updater & CI/CD Automation] - 2026-08-31
 - **Application Package Identity**:
   - Changed `applicationId` to `com.scorpiitech.escapify` in `app/build.gradle.kts`, giving Escapify a standalone application identity that installs cleanly alongside other music players without signature or package conflicts.
