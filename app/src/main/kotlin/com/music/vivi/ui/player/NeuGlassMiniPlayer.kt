@@ -332,7 +332,7 @@ fun NeuGlassMiniPlayer(
                                     playerConnection.player.seekTo(0, 0)
                                     playerConnection.player.playWhenReady = true
                                 } else {
-                                    playerConnection.player.togglePlayPause()
+                                    playerConnection.togglePlayPause()
                                 }
                             }
                     ) {

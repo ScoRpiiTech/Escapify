@@ -75,6 +75,12 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Bugfix & CI / Permanent Keystore Tracking & Mini Player Controls Fix (v6.1.2)] - 2026-08-31
+- **Permanent Keystore in Repository**:
+  - Removed `persistent-debug.keystore` from `.gitignore` and committed the permanent keystore file so GitHub Actions CI has access to the signing certificate.
+- **Neu-Glass Mini Player Controls Fix**:
+  - Fixed `togglePlayPause()` method call on `PlayerConnection`.
+
 ### [DevOps & Packaging / Permanent Signing Keystore for Seamless In-App Updates (v6.1.1)] - 2026-08-31
 - **Permanent Release Signing**:
   - Configured permanent persistent keystore for all release builds in Gradle and CI.
