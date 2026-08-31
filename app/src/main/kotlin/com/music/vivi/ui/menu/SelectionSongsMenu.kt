@@ -57,6 +57,7 @@ import com.music.vivi.models.toMediaMetadata
 import com.music.vivi.playback.ExoDownloadService
 import com.music.vivi.playback.queues.ListQueue
 import com.music.vivi.ui.component.DefaultDialog
+import com.music.vivi.playback.DownloadUtil
 import com.music.vivi.ui.component.Material3MenuGroup
 import com.music.vivi.ui.component.Material3MenuItemData
 import com.music.vivi.ui.component.NewAction
@@ -78,15 +79,14 @@ fun SelectionSongMenu(
     val context = LocalContext.current
     val database = LocalDatabase.current
     val downloadUtil = LocalDownloadUtil.current
-    val coroutineScope = rememberCoroutineScope()
-    val playerConnection = LocalPlayerConnection.current ?: return
-    val syncUtils = LocalSyncUtils.current
     val listenTogetherManager = com.music.vivi.LocalListenTogetherManager.current
-    val isGuest = listenTogetherManager?.isInRoom == true && listenTogetherManager.isHost == false
+    val isGuest = listenTogetherManager?.isInRoom == true && !listenTogetherManager.isHost
+    val playerConnection = LocalPlayerConnection.current ?: return
+    val coroutineScope = rememberCoroutineScope()
 
-    val allInLibrary by remember {
+    val allInLibrary by remember(songSelection) {
         mutableStateOf(
-            songSelection.all {
+            songSelection.isNotEmpty() && songSelection.all {
                 it.song.inLibrary != null
             },
         )
@@ -98,6 +98,13 @@ fun SelectionSongMenu(
                 it.song.liked
             },
         )
+    }
+
+    val hasDownloaded = remember(songSelection) {
+        songSelection.any { it.song.isDownloaded }
+    }
+    val hasUndownloaded = remember(songSelection) {
+        songSelection.any { !it.song.isDownloaded }
     }
 
     var downloadState by remember {
@@ -394,13 +401,6 @@ fun SelectionSongMenu(
         }
 
         item { Spacer(modifier = Modifier.height(12.dp)) }
-
-        val hasDownloaded = remember(songSelection) {
-            songSelection.any { it.song.isDownloaded }
-        }
-        val hasUndownloaded = remember(songSelection) {
-            songSelection.any { !it.song.isDownloaded }
-        }
 
         item {
             Material3MenuGroup(

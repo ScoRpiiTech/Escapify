@@ -45,6 +45,7 @@ import com.music.vivi.LocalSyncUtils
 import com.music.vivi.R
 import com.music.vivi.extensions.toMediaItem
 import com.music.vivi.models.toMediaMetadata
+import com.music.vivi.playback.DownloadUtil
 import com.music.vivi.playback.ExoDownloadService
 import com.music.vivi.playback.queues.ListQueue
 import com.music.vivi.ui.component.DefaultDialog

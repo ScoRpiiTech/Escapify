@@ -77,6 +77,7 @@ import androidx.navigation.NavController
 import com.music.innertube.YouTube
 import com.music.vivi.LocalDatabase
 import com.music.vivi.LocalDownloadUtil
+import com.music.vivi.playback.DownloadUtil
 import com.music.vivi.LocalListenTogetherManager
 import com.music.vivi.LocalPlayerConnection
 import com.music.vivi.R
@@ -112,6 +113,7 @@ fun PlayerMenu(
     mediaMetadata ?: return
     val context = LocalContext.current
     val database = LocalDatabase.current
+    val downloadUtil = LocalDownloadUtil.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val playerVolume = playerConnection.service.playerVolume.collectAsState()
     

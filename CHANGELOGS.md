@@ -75,6 +75,13 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Bugfix & Compilation / Resolve Missing Imports & Composable Scope References (v6.1.5)] - 2026-08-31
+- **Kotlin Import Resolution**:
+  - Added missing `DownloadUtil` and `LocalDatabase` imports across all menu and playlist screens.
+  - Resolved `LazyListScope` `@Composable` state call issue in `SelectionSongsMenu.kt`.
+  - Fixed syntax braces in `SongMenu.kt` and `YouTubeSongMenu.kt`.
+  - Replaced custom layout in `StorageSettings` dialog with standard `confirmButton` and `dismissButton`.
+
 ### [Bugfix & Coroutine Sync / Async CleanGhostDownloads Lambda Resolution (v6.1.4)] - 2026-08-31
 - **Background Async Cleanup Helper**:
   - Converted `DownloadUtil.cleanGhostDownloads` to launch internally on `Dispatchers.IO` so it can be safely invoked from any UI menu lambda or compose scope without coroutine suspension conflicts.

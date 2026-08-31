@@ -70,6 +70,7 @@ import coil3.compose.AsyncImage
 import com.music.innertube.YouTube
 import com.music.vivi.LocalDatabase
 import com.music.vivi.LocalDownloadUtil
+import com.music.vivi.playback.DownloadUtil
 import com.music.vivi.LocalListenTogetherManager
 import com.music.vivi.LocalPlayerConnection
 import com.music.vivi.R

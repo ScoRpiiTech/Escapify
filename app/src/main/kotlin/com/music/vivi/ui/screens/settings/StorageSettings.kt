@@ -184,31 +184,20 @@ fun StorageSettings(
             },
             confirmButton = {
                 if (report.incompleteSongs.isNotEmpty()) {
-                    Row {
-                        TextButton(
-                            onClick = {
-                                DownloadUtil.cleanGhostDownloads(database, downloadCache)
-                                showScanReportDialog = false
+                    TextButton(
+                        onClick = {
+                            coroutineScope.launch {
+                                DownloadUtil.repairIncompleteDownloads(
+                                    context,
+                                    database,
+                                    downloadCache,
+                                    report.incompleteSongs
+                                )
                             }
-                        ) {
-                            Text(stringResource(R.string.clean_ghost_downloads))
+                            showScanReportDialog = false
                         }
-                        Spacer(Modifier.width(8.dp))
-                        TextButton(
-                            onClick = {
-                                coroutineScope.launch {
-                                    DownloadUtil.repairIncompleteDownloads(
-                                        context,
-                                        database,
-                                        downloadCache,
-                                        report.incompleteSongs
-                                    )
-                                }
-                                showScanReportDialog = false
-                            }
-                        ) {
-                            Text(stringResource(R.string.repair_now))
-                        }
+                    ) {
+                        Text(stringResource(R.string.repair_now))
                     }
                 } else {
                     TextButton(onClick = { showScanReportDialog = false }) {
@@ -218,8 +207,13 @@ fun StorageSettings(
             },
             dismissButton = {
                 if (report.incompleteSongs.isNotEmpty()) {
-                    TextButton(onClick = { showScanReportDialog = false }) {
-                        Text(stringResource(R.string.cancel))
+                    TextButton(
+                        onClick = {
+                            DownloadUtil.cleanGhostDownloads(database, downloadCache)
+                            showScanReportDialog = false
+                        }
+                    ) {
+                        Text(stringResource(R.string.clean_ghost_downloads))
                     }
                 }
             }

@@ -84,7 +84,9 @@ import androidx.media3.exoplayer.offline.DownloadRequest
 import androidx.media3.exoplayer.offline.DownloadService
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.music.vivi.LocalDatabase
 import com.music.vivi.LocalDownloadUtil
+import com.music.vivi.playback.DownloadUtil
 import com.music.vivi.LocalPlayerAwareWindowInsets
 import com.music.vivi.LocalPlayerConnection
 import com.music.vivi.R
@@ -605,6 +607,8 @@ private fun AutoPlaylistHeader(
 ) {
     val playerConnection = LocalPlayerConnection.current ?: return
     val context = LocalContext.current
+    val database = LocalDatabase.current
+    val downloadUtil = LocalDownloadUtil.current
     
     Column(
         modifier = modifier
