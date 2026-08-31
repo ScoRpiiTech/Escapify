@@ -75,6 +75,10 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Bugfix & Coroutine Sync / Async CleanGhostDownloads Lambda Resolution (v6.1.4)] - 2026-08-31
+- **Background Async Cleanup Helper**:
+  - Converted `DownloadUtil.cleanGhostDownloads` to launch internally on `Dispatchers.IO` so it can be safely invoked from any UI menu lambda or compose scope without coroutine suspension conflicts.
+
 ### [Bugfix & Offline Management / Download Integrity & Multi-Select Delete Fix (v6.1.3)] - 2026-08-31
 - **Ghost Downloads & Storage Sync Fix**:
   - Fixed issue where album downloads prematurely set the database downloaded flag before files finished downloading to disk.

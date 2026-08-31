@@ -506,27 +506,30 @@ constructor(
             }
         }
 
-        suspend fun cleanGhostDownloads(
+        fun cleanGhostDownloads(
             database: MusicDatabase,
             downloadCache: SimpleCache,
-        ): Int = withContext(Dispatchers.IO) {
-            val allDownloaded = try {
-                database.downloadedSongsByNameAsc().first()
-            } catch (e: Exception) {
-                emptyList()
-            }
-            val ghostIds = mutableListOf<String>()
-            for (item in allDownloaded) {
-                val song = item.song
-                val cachedBytes = downloadCache.getCachedBytes(song.id, 0, Long.MAX_VALUE)
-                if (cachedBytes < 100_000L) {
-                    ghostIds.add(song.id)
+            onFinished: ((Int) -> Unit)? = null,
+        ) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val allDownloaded = try {
+                    database.downloadedSongsByNameAsc().first()
+                } catch (e: Exception) {
+                    emptyList()
                 }
+                val ghostIds = mutableListOf<String>()
+                for (item in allDownloaded) {
+                    val song = item.song
+                    val cachedBytes = downloadCache.getCachedBytes(song.id, 0, Long.MAX_VALUE)
+                    if (cachedBytes < 100_000L) {
+                        ghostIds.add(song.id)
+                    }
+                }
+                if (ghostIds.isNotEmpty()) {
+                    database.clearDownloadedFlags(ghostIds)
+                }
+                onFinished?.invoke(ghostIds.size)
             }
-            if (ghostIds.isNotEmpty()) {
-                database.clearDownloadedFlags(ghostIds)
-            }
-            ghostIds.size
         }
 
         fun clearAllDownloads(

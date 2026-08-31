@@ -187,9 +187,7 @@ fun StorageSettings(
                     Row {
                         TextButton(
                             onClick = {
-                                coroutineScope.launch {
-                                    DownloadUtil.cleanGhostDownloads(database, downloadCache)
-                                }
+                                DownloadUtil.cleanGhostDownloads(database, downloadCache)
                                 showScanReportDialog = false
                             }
                         ) {
