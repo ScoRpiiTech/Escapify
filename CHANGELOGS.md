@@ -75,6 +75,11 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Bugfix & Compilation / Resolve Duplicate Imports & SyncUtils Binding (v6.1.6)] - 2026-08-31
+- **Clean Import & Scope Binding**:
+  - Restored missing `syncUtils` in `SelectionSongsMenu.kt`.
+  - Removed duplicate `DownloadUtil` imports in `SongMenu.kt` and `YouTubeSongMenu.kt`.
+
 ### [Bugfix & Compilation / Resolve Missing Imports & Composable Scope References (v6.1.5)] - 2026-08-31
 - **Kotlin Import Resolution**:
   - Added missing `DownloadUtil` and `LocalDatabase` imports across all menu and playlist screens.

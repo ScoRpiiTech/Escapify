@@ -82,6 +82,7 @@ fun SelectionSongMenu(
     val listenTogetherManager = com.music.vivi.LocalListenTogetherManager.current
     val isGuest = listenTogetherManager?.isInRoom == true && !listenTogetherManager.isHost
     val playerConnection = LocalPlayerConnection.current ?: return
+    val syncUtils = LocalSyncUtils.current
     val coroutineScope = rememberCoroutineScope()
 
     val allInLibrary by remember(songSelection) {
