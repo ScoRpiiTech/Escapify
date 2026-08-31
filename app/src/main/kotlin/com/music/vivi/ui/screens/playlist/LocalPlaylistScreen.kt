@@ -359,14 +359,12 @@ fun LocalPlaylistScreen(
                                 playlist?.id?.let { clearPlaylist(it) }
                             }
                         }
-                        songs.forEach { song ->
-                            DownloadService.sendRemoveDownload(
-                                context,
-                                ExoDownloadService::class.java,
-                                song.song.id,
-                                false
-                            )
-                        }
+                        DownloadUtil.removeDownloads(
+                            context,
+                            database,
+                            downloadUtil.downloadCache,
+                            songs.map { it.song.id }
+                        )
                     }
                 ) {
                     Text(text = stringResource(android.R.string.ok))

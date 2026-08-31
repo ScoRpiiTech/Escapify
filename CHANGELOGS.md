@@ -75,6 +75,15 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Bugfix & Offline Management / Download Integrity & Multi-Select Delete Fix (v6.1.3)] - 2026-08-31
+- **Ghost Downloads & Storage Sync Fix**:
+  - Fixed issue where album downloads prematurely set the database downloaded flag before files finished downloading to disk.
+  - Added full cache cleanup + database synchronization when removing downloads across all menus (`SongMenu`, `SelectionSongsMenu`, `AutoPlaylistMenu`, `AlbumMenu`, `YouTubeAlbumMenu`, and `StorageSettings`).
+- **Multi-Select Download & Remove Controls**:
+  - In Selection mode, "Remove from Downloads" is now always available when any selected track is downloaded or marked offline.
+  - Added "Remove Phantom / Ghost Entries" (1-tap cleanup of tracks not physically saved on disk) in both the Downloaded screen menu and Storage Settings.
+  - Added "Clear Downloaded List" to cleanly wipe ghost entries and reset downloaded state.
+
 ### [Bugfix & CI / Permanent Keystore Tracking & Mini Player Controls Fix (v6.1.2)] - 2026-08-31
 - **Permanent Keystore in Repository**:
   - Removed `persistent-debug.keystore` from `.gitignore` and committed the permanent keystore file so GitHub Actions CI has access to the signing certificate.

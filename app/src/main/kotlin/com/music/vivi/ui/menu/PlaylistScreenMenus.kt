@@ -204,17 +204,19 @@ fun LocalPlaylistMenu(
 @Composable
 fun AutoPlaylistMenu(
     downloadState: Int,
+    isDownloadedPlaylist: Boolean = false,
     onQueue: () -> Unit,
     onDownload: () -> Unit,
+    onCleanGhost: (() -> Unit)? = null,
     onDismiss: () -> Unit
 ) {
     val listenTogetherManager = LocalListenTogetherManager.current
     val isGuest = listenTogetherManager?.isInRoom == true && !listenTogetherManager.isHost
 
-    val downloadMenuItem = when (downloadState) {
-        Download.STATE_COMPLETED -> Material3MenuItemData(
-            title = { Text(stringResource(R.string.remove_download)) },
-            description = { Text(stringResource(R.string.remove_download_playlist_desc)) },
+    val downloadMenuItem = if (isDownloadedPlaylist) {
+        Material3MenuItemData(
+            title = { Text(stringResource(R.string.clear_download_list)) },
+            description = { Text(stringResource(R.string.clear_download_list_confirm)) },
             icon = {
                 Icon(
                     painter = painterResource(R.drawable.offline),
@@ -226,34 +228,51 @@ fun AutoPlaylistMenu(
                 onDismiss()
             }
         )
-        Download.STATE_QUEUED, Download.STATE_DOWNLOADING -> Material3MenuItemData(
-            title = { Text(stringResource(R.string.downloading)) },
-            description = { Text(stringResource(R.string.download_in_progress_desc)) },
-            icon = {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(24.dp),
-                    strokeWidth = 2.dp
-                )
-            },
-            onClick = {
-                onDownload()
-                onDismiss()
-            }
-        )
-        else -> Material3MenuItemData(
-            title = { Text(stringResource(R.string.action_download)) },
-            description = { Text(stringResource(R.string.download_playlist_desc)) },
-            icon = {
-                Icon(
-                    painter = painterResource(R.drawable.download),
-                    contentDescription = null
-                )
-            },
-            onClick = {
-                onDownload()
-                onDismiss()
-            }
-        )
+    } else {
+        when (downloadState) {
+            Download.STATE_COMPLETED -> Material3MenuItemData(
+                title = { Text(stringResource(R.string.remove_download)) },
+                description = { Text(stringResource(R.string.remove_download_playlist_desc)) },
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.offline),
+                        contentDescription = null
+                    )
+                },
+                onClick = {
+                    onDownload()
+                    onDismiss()
+                }
+            )
+            Download.STATE_QUEUED, Download.STATE_DOWNLOADING -> Material3MenuItemData(
+                title = { Text(stringResource(R.string.downloading)) },
+                description = { Text(stringResource(R.string.download_in_progress_desc)) },
+                icon = {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp
+                    )
+                },
+                onClick = {
+                    onDownload()
+                    onDismiss()
+                }
+            )
+            else -> Material3MenuItemData(
+                title = { Text(stringResource(R.string.action_download)) },
+                description = { Text(stringResource(R.string.download_playlist_desc)) },
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.download),
+                        contentDescription = null
+                    )
+                },
+                onClick = {
+                    onDownload()
+                    onDismiss()
+                }
+            )
+        }
     }
 
     Material3MenuGroup(
@@ -271,6 +290,22 @@ fun AutoPlaylistMenu(
                     },
                     onClick = {
                         onQueue()
+                        onDismiss()
+                    }
+                )
+            } else null,
+            if (isDownloadedPlaylist && onCleanGhost != null) {
+                Material3MenuItemData(
+                    title = { Text(stringResource(R.string.clean_ghost_downloads)) },
+                    description = { Text("Sync and remove tracks not saved on disk") },
+                    icon = {
+                        Icon(
+                            painter = painterResource(R.drawable.refresh),
+                            contentDescription = null
+                        )
+                    },
+                    onClick = {
+                        onCleanGhost()
                         onDismiss()
                     }
                 )

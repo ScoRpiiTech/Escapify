@@ -189,14 +189,14 @@ fun YouTubeSelectionSongMenu(
                 TextButton(
                     onClick = {
                         showRemoveDownloadDialog = false
-                        songSelection.forEach { song ->
-                            DownloadService.sendRemoveDownload(
-                                context,
-                                ExoDownloadService::class.java,
-                                song.id,
-                                false,
-                            )
-                        }
+                        DownloadUtil.removeDownloads(
+                            context,
+                            database,
+                            downloadUtil.downloadCache,
+                            songSelection.map { it.id }
+                        )
+                        clearAction()
+                        onDismiss()
                     },
                 ) {
                     Text(text = stringResource(android.R.string.ok))

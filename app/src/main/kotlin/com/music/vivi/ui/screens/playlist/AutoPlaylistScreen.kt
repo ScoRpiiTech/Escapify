@@ -128,6 +128,7 @@ fun AutoPlaylistScreen(
     val menuState = LocalMenuState.current
     val haptic = LocalHapticFeedback.current
     val focusManager = LocalFocusManager.current
+    val database = com.music.vivi.LocalDatabase.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val isPlaying by playerConnection.isEffectivelyPlaying.collectAsState()
     val mediaMetadata by playerConnection.mediaMetadata.collectAsState()
@@ -267,12 +268,13 @@ fun AutoPlaylistScreen(
                 TextButton(
                     onClick = {
                         showRemoveDownloadDialog = false
-                        songs!!.forEach { song ->
-                            DownloadService.sendRemoveDownload(
+                        val songIds = songs?.map { it.song.id } ?: emptyList()
+                        if (songIds.isNotEmpty()) {
+                            DownloadUtil.removeDownloads(
                                 context,
-                                ExoDownloadService::class.java,
-                                song.song.id,
-                                false,
+                                database,
+                                downloadUtil.downloadCache,
+                                songIds
                             )
                         }
                     },
@@ -745,41 +747,47 @@ private fun AutoPlaylistHeader(
             // Menu Button
            Surface(
                 onClick = {
+                    val isDownloadedPlaylist = (name == context.getString(R.string.offline))
                     menuState.show {
                         AutoPlaylistMenu(
                             downloadState = downloadState,
+                            isDownloadedPlaylist = isDownloadedPlaylist,
                             onQueue = {
                                 playerConnection.addToQueue(
                                     songs.map { it.toMediaItem() }
                                 )
                             },
+                            onCleanGhost = if (isDownloadedPlaylist) {
+                                {
+                                    DownloadUtil.cleanGhostDownloads(
+                                        database,
+                                        downloadUtil.downloadCache
+                                    )
+                                }
+                            } else null,
                             onDownload = {
-                                when (downloadState) {
-                                    Download.STATE_COMPLETED -> onShowRemoveDownloadDialog()
-                                    Download.STATE_DOWNLOADING -> {
-                                        songs.forEach { song ->
-                                            DownloadService.sendRemoveDownload(
-                                                context,
-                                                ExoDownloadService::class.java,
-                                                song.song.id,
-                                                false,
-                                            )
-                                        }
-                                    }
-                                    else -> {
-                                        songs.forEach { song ->
-                                            val downloadRequest = DownloadRequest
-                                                .Builder(song.song.id, song.song.id.toUri())
-                                                .setCustomCacheKey(song.song.id)
-                                                .setData(song.song.title.toByteArray())
-                                                .build()
-                                            DownloadService.sendAddDownload(
-                                                context,
-                                                ExoDownloadService::class.java,
-                                                downloadRequest,
-                                                false,
-                                            )
-                                        }
+                                if (downloadState == Download.STATE_COMPLETED || isDownloadedPlaylist) {
+                                    onShowRemoveDownloadDialog()
+                                } else if (downloadState == Download.STATE_DOWNLOADING) {
+                                    DownloadUtil.removeDownloads(
+                                        context,
+                                        database,
+                                        downloadUtil.downloadCache,
+                                        songs.map { it.song.id }
+                                    )
+                                } else {
+                                    songs.forEach { song ->
+                                        val downloadRequest = DownloadRequest
+                                            .Builder(song.song.id, song.song.id.toUri())
+                                            .setCustomCacheKey(song.song.id)
+                                            .setData(song.song.title.toByteArray())
+                                            .build()
+                                        DownloadService.sendAddDownload(
+                                            context,
+                                            ExoDownloadService::class.java,
+                                            downloadRequest,
+                                            false,
+                                        )
                                     }
                                 }
                             },

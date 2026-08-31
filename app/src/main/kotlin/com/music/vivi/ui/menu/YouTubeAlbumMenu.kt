@@ -451,12 +451,13 @@ fun YouTubeAlbumMenu(
                                     )
                                 },
                                 onClick = {
-                                    album?.songs?.forEach { song ->
-                                        DownloadService.sendRemoveDownload(
+                                    val songIds = album?.songs?.map { it.id } ?: emptyList()
+                                    if (songIds.isNotEmpty()) {
+                                        DownloadUtil.removeDownloads(
                                             context,
-                                            ExoDownloadService::class.java,
-                                            song.id,
-                                            false,
+                                            database,
+                                            downloadUtil.downloadCache,
+                                            songIds
                                         )
                                     }
                                 }
@@ -472,12 +473,13 @@ fun YouTubeAlbumMenu(
                                     )
                                 },
                                 onClick = {
-                                    album?.songs?.forEach { song ->
-                                        DownloadService.sendRemoveDownload(
+                                    val songIds = album?.songs?.map { it.id } ?: emptyList()
+                                    if (songIds.isNotEmpty()) {
+                                        DownloadUtil.removeDownloads(
                                             context,
-                                            ExoDownloadService::class.java,
-                                            song.id,
-                                            false,
+                                            database,
+                                            downloadUtil.downloadCache,
+                                            songIds
                                         )
                                     }
                                 }
@@ -501,7 +503,7 @@ fun YouTubeAlbumMenu(
                                                     update(albumWithSongs.album.copy(bookmarkedAt = LocalDateTime.now()))
                                                 }
                                                 albumWithSongs.songs.forEach { song ->
-                                                    insert(song.song.copy(albumId = albumWithSongs.album.id, isDownloaded = true))
+                                                    insert(song.song.copy(albumId = albumWithSongs.album.id))
                                                 }
                                             }
                                         }

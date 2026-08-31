@@ -184,20 +184,33 @@ fun StorageSettings(
             },
             confirmButton = {
                 if (report.incompleteSongs.isNotEmpty()) {
-                    TextButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                DownloadUtil.repairIncompleteDownloads(
-                                    context,
-                                    database,
-                                    downloadCache,
-                                    report.incompleteSongs
-                                )
+                    Row {
+                        TextButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    DownloadUtil.cleanGhostDownloads(database, downloadCache)
+                                }
+                                showScanReportDialog = false
                             }
-                            showScanReportDialog = false
+                        ) {
+                            Text(stringResource(R.string.clean_ghost_downloads))
                         }
-                    ) {
-                        Text(stringResource(R.string.repair_now))
+                        Spacer(Modifier.width(8.dp))
+                        TextButton(
+                            onClick = {
+                                coroutineScope.launch {
+                                    DownloadUtil.repairIncompleteDownloads(
+                                        context,
+                                        database,
+                                        downloadCache,
+                                        report.incompleteSongs
+                                    )
+                                }
+                                showScanReportDialog = false
+                            }
+                        ) {
+                            Text(stringResource(R.string.repair_now))
+                        }
                     }
                 } else {
                     TextButton(onClick = { showScanReportDialog = false }) {
@@ -220,11 +233,7 @@ fun StorageSettings(
             title = stringResource(R.string.clear_all_downloads),
             onDismiss = { clearDownloads = false },
             onConfirm = {
-                coroutineScope.launch(Dispatchers.IO) {
-                    downloadCache.keys.forEach { key ->
-                        downloadCache.removeResource(key)
-                    }
-                }
+                DownloadUtil.clearAllDownloads(context, database, downloadCache)
                 clearDownloads = false
             },
             onCancel = { clearDownloads = false },

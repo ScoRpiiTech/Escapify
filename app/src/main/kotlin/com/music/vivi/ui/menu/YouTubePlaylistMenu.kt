@@ -244,14 +244,12 @@ fun YouTubePlaylistMenu(
                 TextButton(
                     onClick = {
                         showRemoveDownloadDialog = false
-                        songs.forEach { song ->
-                            DownloadService.sendRemoveDownload(
-                                context,
-                                ExoDownloadService::class.java,
-                                song.id,
-                                false
-                            )
-                        }
+                        DownloadUtil.removeDownloads(
+                            context,
+                            database,
+                            downloadUtil.downloadCache,
+                            songs.map { it.id }
+                        )
                     }
                 ) {
                     Text(text = stringResource(android.R.string.ok))

@@ -486,11 +486,11 @@ fun PlayerMenu(
                                     )
                                 },
                                 onClick = {
-                                    DownloadService.sendRemoveDownload(
+                                    DownloadUtil.removeDownload(
                                         context,
-                                        ExoDownloadService::class.java,
-                                        mediaMetadata.id,
-                                        false,
+                                        database,
+                                        downloadUtil.downloadCache,
+                                        mediaMetadata.id
                                     )
                                 }
                             )
@@ -506,11 +506,11 @@ fun PlayerMenu(
                                     )
                                 },
                                 onClick = {
-                                    DownloadService.sendRemoveDownload(
+                                    DownloadUtil.removeDownload(
                                         context,
-                                        ExoDownloadService::class.java,
-                                        mediaMetadata.id,
-                                        false,
+                                        database,
+                                        downloadUtil.downloadCache,
+                                        mediaMetadata.id
                                     )
                                 }
                             )

@@ -174,14 +174,14 @@ fun SelectionSongMenu(
                 TextButton(
                     onClick = {
                         showRemoveDownloadDialog = false
-                        songSelection.forEach { song ->
-                            DownloadService.sendRemoveDownload(
-                                context,
-                                ExoDownloadService::class.java,
-                                song.song.id,
-                                false,
-                            )
-                        }
+                        DownloadUtil.removeDownloads(
+                            context,
+                            database,
+                            downloadUtil.downloadCache,
+                            songSelection.map { it.song.id }
+                        )
+                        clearAction()
+                        onDismiss()
                     },
                 ) {
                     Text(text = stringResource(android.R.string.ok))
@@ -395,73 +395,68 @@ fun SelectionSongMenu(
 
         item { Spacer(modifier = Modifier.height(12.dp)) }
 
+        val hasDownloaded = remember(songSelection) {
+            songSelection.any { it.song.isDownloaded }
+        }
+        val hasUndownloaded = remember(songSelection) {
+            songSelection.any { !it.song.isDownloaded }
+        }
+
         item {
             Material3MenuGroup(
                 expressive = true,
                 items = buildList {
-                    add(
-                        when (downloadState) {
-                            Download.STATE_COMPLETED -> {
-                                Material3MenuItemData(
-                                    title = {
-                                        Text(
-                                            text = stringResource(R.string.remove_download)
+                    if (hasDownloaded || downloadState == Download.STATE_COMPLETED) {
+                        add(
+                            Material3MenuItemData(
+                                title = {
+                                    Text(
+                                        text = stringResource(R.string.remove_download)
+                                    )
+                                },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.offline),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+                                    showRemoveDownloadDialog = true
+                                }
+                            )
+                        )
+                    }
+                    if (hasUndownloaded || downloadState == Download.STATE_STOPPED) {
+                        add(
+                            Material3MenuItemData(
+                                title = { Text(text = stringResource(R.string.action_download)) },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.download),
+                                        contentDescription = null,
+                                    )
+                                },
+                                onClick = {
+                                    onDismiss()
+                                    songSelection.forEach { song ->
+                                        val downloadRequest =
+                                            DownloadRequest
+                                                .Builder(song.id, song.id.toUri())
+                                                .setCustomCacheKey(song.id)
+                                                .setData(song.song.title.toByteArray())
+                                                .build()
+                                        DownloadService.sendAddDownload(
+                                            context,
+                                            ExoDownloadService::class.java,
+                                            downloadRequest,
+                                            false,
                                         )
-                                    },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.offline),
-                                            contentDescription = null
-                                        )
-                                    },
-                                    onClick = {
-                                        showRemoveDownloadDialog = true
                                     }
-                                )
-                            }
-                            Download.STATE_QUEUED, Download.STATE_DOWNLOADING -> {
-                                Material3MenuItemData(
-                                    title = { Text(text = stringResource(R.string.downloading)) },
-                                    icon = {
-                                        CircularProgressIndicator(
-                                            modifier = Modifier.size(24.dp),
-                                            strokeWidth = 2.dp
-                                        )
-                                    },
-                                    onClick = {
-                                        showRemoveDownloadDialog = true
-                                    }
-                                )
-                            }
-                            else -> {
-                                Material3MenuItemData(
-                                    title = { Text(text = stringResource(R.string.action_download)) },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.download),
-                                            contentDescription = null,
-                                        )
-                                    },
-                                    onClick = {
-                                        songSelection.forEach { song ->
-                                            val downloadRequest =
-                                                DownloadRequest
-                                                    .Builder(song.id, song.id.toUri())
-                                                    .setCustomCacheKey(song.id)
-                                                    .setData(song.song.title.toByteArray())
-                                                    .build()
-                                            DownloadService.sendAddDownload(
-                                                context,
-                                                ExoDownloadService::class.java,
-                                                downloadRequest,
-                                                false,
-                                            )
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    )
+                                    clearAction()
+                                }
+                            )
+                        )
+                    }
                     add(
                         Material3MenuItemData(
                             title = {

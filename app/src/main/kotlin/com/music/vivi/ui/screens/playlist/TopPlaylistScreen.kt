@@ -117,6 +117,7 @@ fun TopPlaylistScreen(
     viewModel: TopPlaylistViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
+    val database = com.music.vivi.LocalDatabase.current
     val menuState = LocalMenuState.current
     val haptic = LocalHapticFeedback.current
     val focusManager = LocalFocusManager.current
@@ -230,12 +231,13 @@ fun TopPlaylistScreen(
                 TextButton(
                     onClick = {
                         showRemoveDownloadDialog = false
-                        songs!!.forEach { song ->
-                            DownloadService.sendRemoveDownload(
+                        val songIds = songs?.map { it.song.id } ?: emptyList()
+                        if (songIds.isNotEmpty()) {
+                            DownloadUtil.removeDownloads(
                                 context,
-                                ExoDownloadService::class.java,
-                                song.song.id,
-                                false,
+                                database,
+                                downloadUtil.downloadCache,
+                                songIds
                             )
                         }
                     },

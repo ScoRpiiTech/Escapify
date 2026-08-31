@@ -459,5 +459,99 @@ constructor(
                 )
             }
         }
+
+        fun removeDownload(
+            context: Context,
+            database: MusicDatabase,
+            downloadCache: SimpleCache,
+            songId: String,
+        ) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    androidx.media3.exoplayer.offline.DownloadService.sendRemoveDownload(
+                        context,
+                        ExoDownloadService::class.java,
+                        songId,
+                        false
+                    )
+                } catch (_: Exception) {}
+                try {
+                    downloadCache.removeResource(songId)
+                } catch (_: Exception) {}
+                database.updateDownloadedInfo(songId, false, null)
+            }
+        }
+
+        fun removeDownloads(
+            context: Context,
+            database: MusicDatabase,
+            downloadCache: SimpleCache,
+            songIds: List<String>,
+        ) {
+            CoroutineScope(Dispatchers.IO).launch {
+                songIds.forEach { songId ->
+                    try {
+                        androidx.media3.exoplayer.offline.DownloadService.sendRemoveDownload(
+                            context,
+                            ExoDownloadService::class.java,
+                            songId,
+                            false
+                        )
+                    } catch (_: Exception) {}
+                    try {
+                        downloadCache.removeResource(songId)
+                    } catch (_: Exception) {}
+                }
+                database.clearDownloadedFlags(songIds)
+            }
+        }
+
+        suspend fun cleanGhostDownloads(
+            database: MusicDatabase,
+            downloadCache: SimpleCache,
+        ): Int = withContext(Dispatchers.IO) {
+            val allDownloaded = try {
+                database.downloadedSongsByNameAsc().first()
+            } catch (e: Exception) {
+                emptyList()
+            }
+            val ghostIds = mutableListOf<String>()
+            for (item in allDownloaded) {
+                val song = item.song
+                val cachedBytes = downloadCache.getCachedBytes(song.id, 0, Long.MAX_VALUE)
+                if (cachedBytes < 100_000L) {
+                    ghostIds.add(song.id)
+                }
+            }
+            if (ghostIds.isNotEmpty()) {
+                database.clearDownloadedFlags(ghostIds)
+            }
+            ghostIds.size
+        }
+
+        fun clearAllDownloads(
+            context: Context,
+            database: MusicDatabase,
+            downloadCache: SimpleCache,
+        ) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    downloadCache.keys.forEach { key ->
+                        try {
+                            downloadCache.removeResource(key)
+                        } catch (_: Exception) {}
+                        try {
+                            androidx.media3.exoplayer.offline.DownloadService.sendRemoveDownload(
+                                context,
+                                ExoDownloadService::class.java,
+                                key,
+                                false
+                            )
+                        } catch (_: Exception) {}
+                    }
+                } catch (_: Exception) {}
+                database.clearAllDownloadedFlags()
+            }
+        }
     }
 }

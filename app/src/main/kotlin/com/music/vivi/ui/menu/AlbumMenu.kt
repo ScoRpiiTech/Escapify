@@ -487,14 +487,12 @@ fun AlbumMenu(
                                     )
                                 },
                                 onClick = {
-                                    songs.forEach { song ->
-                                        DownloadService.sendRemoveDownload(
-                                            context,
-                                            ExoDownloadService::class.java,
-                                            song.id,
-                                            false,
-                                        )
-                                    }
+                                    DownloadUtil.removeDownloads(
+                                        context,
+                                        database,
+                                        downloadUtil.downloadCache,
+                                        songs.map { it.id }
+                                    )
                                 }
                             )
                         }
@@ -508,14 +506,12 @@ fun AlbumMenu(
                                     )
                                 },
                                 onClick = {
-                                    songs.forEach { song ->
-                                        DownloadService.sendRemoveDownload(
-                                            context,
-                                            ExoDownloadService::class.java,
-                                            song.id,
-                                            false,
-                                        )
-                                    }
+                                    DownloadUtil.removeDownloads(
+                                        context,
+                                        database,
+                                        downloadUtil.downloadCache,
+                                        songs.map { it.id }
+                                    )
                                 }
                             )
                         }
@@ -536,7 +532,7 @@ fun AlbumMenu(
                                                 update(album.album.copy(bookmarkedAt = LocalDateTime.now()))
                                             }
                                             songs.forEach { song ->
-                                                insert(song.song.copy(albumId = album.id, isDownloaded = true))
+                                                insert(song.song.copy(albumId = album.id))
                                             }
                                         }
                                     }

@@ -634,74 +634,73 @@ fun SongMenu(
             Material3MenuGroup(
                 expressive = true,
                 items = buildList {
-                    when (download?.state) {
-                        Download.STATE_COMPLETED -> {
-                            add(
-                                Material3MenuItemData(
-                                    title = { Text(text = stringResource(R.string.redownload_song)) },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.refresh),
-                                            contentDescription = null
-                                        )
-                                    },
-                                    onClick = {
-                                        onDismiss()
-                                        DownloadUtil.redownloadSong(
-                                            context,
-                                            database,
-                                            playerConnection.service.downloadCache,
-                                            song.song
-                                        )
-                                    }
-                                )
+                    if (song.song.isDownloaded || download?.state == Download.STATE_COMPLETED) {
+                        add(
+                            Material3MenuItemData(
+                                title = { Text(text = stringResource(R.string.redownload_song)) },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.refresh),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+                                    onDismiss()
+                                    DownloadUtil.redownloadSong(
+                                        context,
+                                        database,
+                                        playerConnection.service.downloadCache,
+                                        song.song
+                                    )
+                                }
                             )
-                            add(
-                                Material3MenuItemData(
-                                    title = {
-                                        Text(
-                                            text = stringResource(R.string.remove_download)
-                                        )
-                                    },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.offline),
-                                            contentDescription = null
-                                        )
-                                    },
-                                    onClick = {
-                                        DownloadService.sendRemoveDownload(
-                                            context,
-                                            ExoDownloadService::class.java,
-                                            song.id,
-                                            false,
-                                        )
-                                    }
-                                )
+                        )
+                        add(
+                            Material3MenuItemData(
+                                title = {
+                                    Text(
+                                        text = stringResource(R.string.remove_download)
+                                    )
+                                },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.offline),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+                                    onDismiss()
+                                    DownloadUtil.removeDownload(
+                                        context,
+                                        database,
+                                        playerConnection.service.downloadCache,
+                                        song.id
+                                    )
+                                }
                             )
-                        }
-                        Download.STATE_QUEUED, Download.STATE_DOWNLOADING -> {
-                            add(
-                                Material3MenuItemData(
-                                    title = { Text(text = stringResource(R.string.downloading)) },
-                                    icon = {
-                                        CircularProgressIndicator(
-                                            modifier = Modifier.size(24.dp),
-                                            strokeWidth = 2.dp
-                                        )
-                                    },
-                                    onClick = {
-                                        DownloadService.sendRemoveDownload(
-                                            context,
-                                            ExoDownloadService::class.java,
-                                            song.id,
-                                            false,
-                                        )
-                                    }
-                                )
+                        )
+                    } else if (download?.state == Download.STATE_QUEUED || download?.state == Download.STATE_DOWNLOADING) {
+                        add(
+                            Material3MenuItemData(
+                                title = { Text(text = stringResource(R.string.downloading)) },
+                                icon = {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(24.dp),
+                                        strokeWidth = 2.dp
+                                    )
+                                },
+                                onClick = {
+                                    onDismiss()
+                                    DownloadUtil.removeDownload(
+                                        context,
+                                        database,
+                                        playerConnection.service.downloadCache,
+                                        song.id
+                                    )
+                                }
                             )
-                        }
-                        else -> {
+                        )
+                    } else {
                             add(
                                 Material3MenuItemData(
                                     title = { Text(text = stringResource(R.string.action_download)) },

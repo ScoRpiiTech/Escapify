@@ -331,9 +331,12 @@
     <string name="verify_repair_downloads_desc">Scan for corrupted or incomplete downloads and automatically re-download them</string>
     <string name="scan_downloads_running">Scanning downloaded songs for integrity…</string>
     <string name="scan_downloads_all_valid">All %1$d downloaded songs are verified and intact!</string>
-    <string name="scan_downloads_issues_found">Found %1$d incomplete or truncated tracks out of %2$d downloaded songs.</string>
+    <string name="scan_downloads_issues_found">Found %1$d missing or incomplete tracks out of %2$d downloaded songs.</string>
     <string name="repair_now">Repair &amp; Re-download</string>
+    <string name="clean_ghost_downloads">Remove Phantom / Ghost Entries</string>
     <string name="redownload_song">Re-download / Repair</string>
+    <string name="clear_download_list">Clear Downloaded List</string>
+    <string name="clear_download_list_confirm">Remove all songs from Downloaded?</string>
     <string name="queue">Queue</string>
     <string name="persistent_queue">Persistent queue</string>
     <string name="persistent_queue_desc">Restore your last queue when the app starts</string>

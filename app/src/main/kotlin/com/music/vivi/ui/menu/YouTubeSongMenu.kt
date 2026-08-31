@@ -101,9 +101,10 @@ fun YouTubeSongMenu(
 ) {
     val context = LocalContext.current
     val database = LocalDatabase.current
+    val downloadUtil = LocalDownloadUtil.current
     val playerConnection = LocalPlayerConnection.current ?: return
     val librarySong by database.song(song.id).collectAsState(initial = null)
-    val download by LocalDownloadUtil.current.getDownload(song.id).collectAsState(initial = null)
+    val download by downloadUtil.getDownload(song.id).collectAsState(initial = null)
     val coroutineScope = rememberCoroutineScope()
     val syncUtils = LocalSyncUtils.current
     val listenTogetherManager = LocalListenTogetherManager.current
@@ -486,75 +487,74 @@ fun YouTubeSongMenu(
             Material3MenuGroup(
                 expressive = true,
                 items = buildList {
-                    when (download?.state) {
-                        Download.STATE_COMPLETED -> {
-                            add(
-                                Material3MenuItemData(
-                                    title = { Text(text = stringResource(R.string.redownload_song)) },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.refresh),
-                                            contentDescription = null
-                                        )
-                                    },
-                                    onClick = {
-                                        onDismiss()
-                                        val songEntity = librarySong?.song ?: song.toMediaMetadata().toSongEntity()
-                                        DownloadUtil.redownloadSong(
-                                            context,
-                                            database,
-                                            playerConnection.service.downloadCache,
-                                            songEntity
-                                        )
-                                    }
-                                )
+                    if (librarySong?.song?.isDownloaded == true || download?.state == Download.STATE_COMPLETED) {
+                        add(
+                            Material3MenuItemData(
+                                title = { Text(text = stringResource(R.string.redownload_song)) },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.refresh),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+                                    onDismiss()
+                                    val songEntity = librarySong?.song ?: song.toMediaMetadata().toSongEntity()
+                                    DownloadUtil.redownloadSong(
+                                        context,
+                                        database,
+                                        playerConnection.service.downloadCache,
+                                        songEntity
+                                    )
+                                }
                             )
-                            add(
-                                Material3MenuItemData(
-                                    title = {
-                                        Text(
-                                            text = stringResource(R.string.remove_download)
-                                        )
-                                    },
-                                    icon = {
-                                        Icon(
-                                            painter = painterResource(R.drawable.offline),
-                                            contentDescription = null
-                                        )
-                                    },
-                                    onClick = {
-                                        DownloadService.sendRemoveDownload(
-                                            context,
-                                            ExoDownloadService::class.java,
-                                            song.id,
-                                            false,
-                                        )
-                                    }
-                                )
+                        )
+                        add(
+                            Material3MenuItemData(
+                                title = {
+                                    Text(
+                                        text = stringResource(R.string.remove_download)
+                                    )
+                                },
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(R.drawable.offline),
+                                        contentDescription = null
+                                    )
+                                },
+                                onClick = {
+                                    onDismiss()
+                                    DownloadUtil.removeDownload(
+                                        context,
+                                        database,
+                                        downloadUtil.downloadCache,
+                                        song.id
+                                    )
+                                }
                             )
-                        }
-                        Download.STATE_QUEUED, Download.STATE_DOWNLOADING -> {
-                            add(
-                                Material3MenuItemData(
-                                    title = { Text(text = stringResource(R.string.downloading)) },
-                                    icon = {
-                                        CircularProgressIndicator(
-                                            modifier = Modifier.size(24.dp),
-                                            strokeWidth = 2.dp
-                                        )
-                                    },
-                                    onClick = {
-                                        DownloadService.sendRemoveDownload(
-                                            context,
-                                            ExoDownloadService::class.java,
-                                            song.id,
-                                            false,
-                                        )
-                                    }
-                                )
+                        )
+                    } else if (download?.state == Download.STATE_QUEUED || download?.state == Download.STATE_DOWNLOADING) {
+                        add(
+                            Material3MenuItemData(
+                                title = { Text(text = stringResource(R.string.downloading)) },
+                                icon = {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(24.dp),
+                                        strokeWidth = 2.dp
+                                    )
+                                },
+                                onClick = {
+                                    onDismiss()
+                                    DownloadUtil.removeDownload(
+                                        context,
+                                        database,
+                                        downloadUtil.downloadCache,
+                                        song.id
+                                    )
+                                }
                             )
-                        }
-                        else -> {
+                        )
+                    } else {
                             add(
                                 Material3MenuItemData(
                                     title = { Text(text = stringResource(R.string.action_download)) },
