@@ -25,8 +25,8 @@ android {
         applicationId = "com.scorpiitech.escapify"
         minSdk = 26
         targetSdk = 37
-        versionCode = 78
-        versionName = "6.0.9"
+        versionCode = 79
+        versionName = "6.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

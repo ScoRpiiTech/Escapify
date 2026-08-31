@@ -110,6 +110,7 @@ import com.music.vivi.constants.SwipeToSongKey
 import com.music.vivi.constants.ThumbnailCornerRadiusKey
 import com.music.vivi.constants.UseAppleMiniPlayerKey
 import com.music.vivi.constants.UseNewMiniPlayerDesignKey
+import com.music.vivi.constants.UseNeuGlassMiniPlayerKey
 import com.music.vivi.constants.UseNewPlayerDesignKey
 import com.music.vivi.constants.UseExpressiveAlbumDesignKey
 import com.music.vivi.constants.ExpressiveSongAlbumImageKey
@@ -233,8 +234,13 @@ fun AppearanceSettings(
         UseAppleMiniPlayerKey,
         defaultValue = false
     )
-    val currentMiniPlayerDesign = remember(useNewMiniPlayerDesign, useAppleMiniPlayer) {
+    val (useNeuGlassMiniPlayer, onUseNeuGlassMiniPlayerChange) = rememberPreference(
+        UseNeuGlassMiniPlayerKey,
+        defaultValue = false
+    )
+    val currentMiniPlayerDesign = remember(useNewMiniPlayerDesign, useAppleMiniPlayer, useNeuGlassMiniPlayer) {
         when {
+            useNeuGlassMiniPlayer -> MiniPlayerDesignOption.NEU_GLASS
             useAppleMiniPlayer -> MiniPlayerDesignOption.APPLE
             useNewMiniPlayerDesign -> MiniPlayerDesignOption.NEW
             else -> MiniPlayerDesignOption.CLASSIC
@@ -460,14 +466,22 @@ fun AppearanceSettings(
                     MiniPlayerDesignOption.CLASSIC -> {
                         onUseAppleMiniPlayerChange(false)
                         onUseNewMiniPlayerDesignChange(false)
+                        onUseNeuGlassMiniPlayerChange(false)
                     }
                     MiniPlayerDesignOption.NEW -> {
                         onUseAppleMiniPlayerChange(false)
                         onUseNewMiniPlayerDesignChange(true)
+                        onUseNeuGlassMiniPlayerChange(false)
                     }
                     MiniPlayerDesignOption.APPLE -> {
                         onUseAppleMiniPlayerChange(true)
                         onUseNewMiniPlayerDesignChange(false)
+                        onUseNeuGlassMiniPlayerChange(false)
+                    }
+                    MiniPlayerDesignOption.NEU_GLASS -> {
+                        onUseAppleMiniPlayerChange(false)
+                        onUseNewMiniPlayerDesignChange(false)
+                        onUseNeuGlassMiniPlayerChange(true)
                     }
                 }
                 showMiniPlayerDesignDialog = false
@@ -480,6 +494,7 @@ fun AppearanceSettings(
                     MiniPlayerDesignOption.CLASSIC -> stringResource(R.string.classic_player)
                     MiniPlayerDesignOption.NEW -> stringResource(R.string.new_mini_player_design)
                     MiniPlayerDesignOption.APPLE -> stringResource(R.string.apple_mini_player_design)
+                    MiniPlayerDesignOption.NEU_GLASS -> stringResource(R.string.neu_glass_mini_player_design)
                 }
             }
         )
@@ -1247,6 +1262,7 @@ fun AppearanceSettings(
                                     MiniPlayerDesignOption.CLASSIC -> stringResource(R.string.classic_mini_player)
                                     MiniPlayerDesignOption.NEW -> stringResource(R.string.new_mini_player_design)
                                     MiniPlayerDesignOption.APPLE -> stringResource(R.string.apple_mini_player_design)
+                                    MiniPlayerDesignOption.NEU_GLASS -> stringResource(R.string.neu_glass_mini_player_design)
                                 }
                             )
                         },
@@ -2300,5 +2316,6 @@ enum class PlayerDesignOption {
 enum class MiniPlayerDesignOption {
     CLASSIC,
     NEW,
-    APPLE
+    APPLE,
+    NEU_GLASS
 }

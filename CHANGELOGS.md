@@ -75,6 +75,13 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [UI & Theme / Tactile Neu-Glassmorphic Floating Mini Player (v6.1.0)] - 2026-08-31
+- **Neu-Glass Mini Player Style**:
+  - Introduced a floating frosted acrylic capsule with dual-tone lighting rim (highlight on top, ambient shadow below).
+  - Designed tactile 3D convex Play/Pause and Skip buttons with physical pressed state lighting and haptic feedback.
+  - Added dynamic neon gradient progress line along the bottom rim that matches current album art.
+  - Integrated into **Settings ➔ Appearance ➔ Mini Player Design** as a selectable design.
+
 ### [Offline Library & UI / Spotify-Style Downloaded Albums & Compact Quick-Access Grid (v6.0.9)] - 2026-08-31
 - **Spotify-Style Album Downloads & Auto-Bookmark**:
   - Automatically saves and bookmarks full album metadata and track associations in the local database whenever an album is downloaded or liked.

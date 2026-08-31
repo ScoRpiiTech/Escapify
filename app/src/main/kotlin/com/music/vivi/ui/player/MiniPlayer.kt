@@ -119,6 +119,7 @@ import com.music.vivi.constants.SwipeThumbnailKey
 import com.music.vivi.constants.ThumbnailCornerRadius
 import com.music.vivi.constants.UseAppleMiniPlayerKey
 import com.music.vivi.constants.UseNewMiniPlayerDesignKey
+import com.music.vivi.constants.UseNeuGlassMiniPlayerKey
 import com.music.vivi.db.entities.ArtistEntity
 import com.music.vivi.listentogether.ListenTogetherManager
 import com.music.vivi.models.MediaMetadata
@@ -170,13 +171,19 @@ fun MiniPlayer(
     durationState: MutableLongState,
     modifier: Modifier = Modifier
 ) {
-    val useNewMiniPlayerDesign by rememberPreference(UseNewMiniPlayerDesignKey, true)
+    val useNeuGlassMiniPlayer by rememberPreference(UseNeuGlassMiniPlayerKey, false)
     val useAppleMiniPlayer by rememberPreference(UseAppleMiniPlayerKey, false)
+    val useNewMiniPlayerDesign by rememberPreference(UseNewMiniPlayerDesignKey, true)
     
     // Create stable progress state - doesn't cause recomposition on position changes
     val progressState = remember { ProgressState(positionState, durationState) }
 
-    if (useAppleMiniPlayer) {
+    if (useNeuGlassMiniPlayer) {
+        NeuGlassMiniPlayer(
+            progressState = progressState,
+            modifier = modifier
+        )
+    } else if (useAppleMiniPlayer) {
         AppleMiniPlayer(
             progressState = progressState,
             modifier = modifier
