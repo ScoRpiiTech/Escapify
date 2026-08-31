@@ -75,6 +75,15 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [UI & Attribution / ScoRpiiTech Logo, Official Website & Custom Branch Routing (v6.0.8)] - 2026-08-31
+- **Developer Attribution & Logo**:
+  - Replaced legacy developer avatar with the official **Escapify Emblem**.
+  - Updated developer profile link to point directly to **[`ScoRpiiTech`](https://github.com/ScoRpiiTech)**.
+- **Website URL**:
+  - Configured website destination to **[`https://scorpiitech.com`](https://scorpiitech.com)**.
+- **Repository Branch Routing**:
+  - Updated repository links in About Screen and Onboarding Flow to explicitly route to the **`custom-build`** branch (`https://github.com/ScoRpiiTech/Escapify/tree/custom-build`).
+
 ### [Rebranding & UI / Complete In-App Escapify Identity Overhaul (v6.0.7)] - 2026-08-31
 - **Welcome & Onboarding Screens**:
   - Rebranded welcome headers, permissions explainer, setup wizard, and features showcase to **Escapify**.

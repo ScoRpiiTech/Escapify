@@ -213,12 +213,12 @@ fun AboutScreen(
             title = stringResource(R.string.developer_section),
             items = listOf(
                 Material3SettingsItem(
-                    icon = painterResource(R.drawable.dev),
+                    icon = painterResource(R.drawable.icon),
                     title = { Text(stringResource(R.string.developer_name)) },
                     description = { Text(stringResource(R.string.app_developer), color = MaterialTheme.colorScheme.primary) },
                     tintIcon = false,
                     iconShape = cookieShape,
-                    onClick = { uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify") },
+                    onClick = { uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech") },
                     isExpressive = true,
                     descriptionBelow = true,
                     isExternalLink = true
@@ -226,7 +226,7 @@ fun AboutScreen(
                 Material3SettingsItem(
                     icon = painterResource(R.drawable.web_link),
                     title = { Text(stringResource(R.string.website)) },
-                    onClick = { uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify") },
+                    onClick = { uriHandler.safeOpenUri(context, "https://scorpiitech.com") },
                     isExpressive = true,
                     isExternalLink = true
                 )
@@ -257,7 +257,7 @@ fun AboutScreen(
                 Material3SettingsItem(
                     icon = painterResource(R.drawable.github),
                     title = { Text(stringResource(R.string.github_repository)) },
-                    onClick = { uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify") },
+                    onClick = { uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify/tree/custom-build") },
                     isExpressive = true,
                     isExternalLink = true
                 )

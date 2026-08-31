@@ -621,7 +621,7 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                                 )
                             },
                             onClick = {
-                                uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify")
+                                uriHandler.safeOpenUri(context, "https://github.com/ScoRpiiTech/Escapify/tree/custom-build")
                             }
                         )
 
