@@ -122,13 +122,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "ARCHITECTURE", "\"release\"")
         }
         debug {
             applicationIdSuffix = ".debug"
             isDebuggable = true
             signingConfig = signingConfigs.getByName("persistentDebug")
-            buildConfigField("String", "ARCHITECTURE", "\"debug\"")
         }
     }
 
