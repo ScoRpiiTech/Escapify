@@ -1,0 +1,7 @@
+Description::Escapify v6.1.7 brings full download integrity fixes, 1-tap ghost track cleanup, multi-select download removal, an enhanced launcher logo with crisp contrast, and a new official release banner.
+Image::https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png
+* Added 1-tap "Remove Phantom / Ghost Entries" tool in Downloaded section and Storage Settings
+* Added multi-select "Remove from Downloads" action for easy bulk offline track management
+* Fixed ghost track marking on album downloads so songs only register once fully saved to disk
+* Enhanced app launcher icon with enlarged Escapify badge on crisp clean background
+* Added official Escapify promotional release banner and updated in-app update changelogs

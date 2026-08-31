@@ -75,6 +75,15 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Branding & UX / Official Release Banner & Enlarged Launcher Logo (v6.1.7)] - 2026-09-01
+- **Official Escapify Promotional Banner**:
+  - Replaced legacy banner with an official promotional banner featuring Escapify branding, acoustic glow, and neu-glassmorphic styling across in-app update cards and GitHub releases.
+- **Enlarged App Launcher Icon**:
+  - Replaced green background with clean white background `#FFFFFF` for the adaptive launcher icon.
+  - Enlarged the Escapify badge by 25% for bold, crisp visibility and contrast on all Android launchers.
+- **In-App Release Metadata**:
+  - Added dedicated release changelog metadata (`86.txt`) for the in-app updater.
+
 ### [Bugfix & Compilation / Resolve Duplicate Imports & SyncUtils Binding (v6.1.6)] - 2026-08-31
 - **Clean Import & Scope Binding**:
   - Restored missing `syncUtils` in `SelectionSongsMenu.kt`.
