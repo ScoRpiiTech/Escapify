@@ -75,6 +75,11 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [DevOps & Packaging / Permanent Signing Keystore for Seamless In-App Updates (v6.1.1)] - 2026-08-31
+- **Permanent Release Signing**:
+  - Configured permanent persistent keystore for all release builds in Gradle and CI.
+  - Fixes the "App not installed" signature mismatch error, ensuring all future in-app updates install automatically with 1-tap.
+
 ### [UI & Theme / Tactile Neu-Glassmorphic Floating Mini Player (v6.1.0)] - 2026-08-31
 - **Neu-Glass Mini Player Style**:
   - Introduced a floating frosted acrylic capsule with dual-tone lighting rim (highlight on top, ambient shadow below).

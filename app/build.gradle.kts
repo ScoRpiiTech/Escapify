@@ -25,8 +25,8 @@ android {
         applicationId = "com.scorpiitech.escapify"
         minSdk = 26
         targetSdk = 37
-        versionCode = 79
-        versionName = "6.1.0"
+        versionCode = 80
+        versionName = "6.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -113,7 +113,7 @@ android {
         val releaseKeystore = file("keystore/release.keystore")
         val hasReleaseKeystore = releaseKeystore.exists() && System.getenv("STORE_PASSWORD") != null
         release {
-            signingConfig = if (hasReleaseKeystore) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
+            signingConfig = if (hasReleaseKeystore) signingConfigs.getByName("release") else signingConfigs.getByName("persistentDebug")
             isMinifyEnabled = true
             isShrinkResources = true
             isCrunchPngs = false
@@ -127,7 +127,7 @@ android {
         debug {
             applicationIdSuffix = ".debug"
             isDebuggable = true
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("persistentDebug")
             buildConfigField("String", "ARCHITECTURE", "\"debug\"")
         }
     }
