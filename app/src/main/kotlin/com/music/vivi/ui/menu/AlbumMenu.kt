@@ -58,6 +58,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import java.time.LocalDateTime
 import androidx.media3.exoplayer.offline.Download.STATE_COMPLETED
 import androidx.media3.exoplayer.offline.Download.STATE_DOWNLOADING
 import androidx.media3.exoplayer.offline.Download.STATE_QUEUED
@@ -529,6 +530,16 @@ fun AlbumMenu(
                                     )
                                 },
                                 onClick = {
+                                    coroutineScope.launch(Dispatchers.IO) {
+                                        database.query {
+                                            if (album.album.bookmarkedAt == null) {
+                                                update(album.album.copy(bookmarkedAt = LocalDateTime.now()))
+                                            }
+                                            songs.forEach { song ->
+                                                insert(song.song.copy(albumId = album.id, isDownloaded = true))
+                                            }
+                                        }
+                                    }
                                     songs.forEach { song ->
                                         val downloadRequest =
                                             DownloadRequest

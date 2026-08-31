@@ -75,6 +75,14 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Offline Library & UI / Spotify-Style Downloaded Albums & Compact Quick-Access Grid (v6.0.9)] - 2026-08-31
+- **Spotify-Style Album Downloads & Auto-Bookmark**:
+  - Automatically saves and bookmarks full album metadata and track associations in the local database whenever an album is downloaded or liked.
+  - Added **"Downloaded"** filter chip to the **Albums** tab to instantly view all offline albums with full cover art and tracklists.
+- **Compact Quick-Access Library Grid**:
+  - Redesigned oversized square tiles for Liked Songs, Downloaded, My Top 50, Cached, and Uploaded into sleek, space-efficient 2-column Material 3 quick-access tiles (56dp height).
+  - Eliminates vertical clutter so albums, playlists, and artists display immediately in the main library grid.
+
 ### [UI & Attribution / ScoRpiiTech Logo, Official Website & Custom Branch Routing (v6.0.8)] - 2026-08-31
 - **Developer Attribution & Logo**:
   - Replaced legacy developer avatar with the official **Escapify Emblem**.

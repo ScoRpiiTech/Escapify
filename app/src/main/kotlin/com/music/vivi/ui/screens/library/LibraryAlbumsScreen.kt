@@ -126,6 +126,7 @@ fun LibraryAlbumsScreen(
                 chips =
                 listOf(
                     AlbumFilter.LIKED to stringResource(R.string.filter_liked),
+                    AlbumFilter.DOWNLOADED to stringResource(R.string.filter_downloaded),
                     AlbumFilter.LIBRARY to stringResource(R.string.filter_library),
                     AlbumFilter.UPLOADED to stringResource(R.string.filter_uploaded)
                 ),

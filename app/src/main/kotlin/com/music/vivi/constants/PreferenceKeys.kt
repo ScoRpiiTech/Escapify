@@ -330,6 +330,7 @@ enum class ArtistSourceFilter {
 enum class AlbumFilter {
     LIBRARY,
     LIKED,
+    DOWNLOADED,
     UPLOADED
 }
 

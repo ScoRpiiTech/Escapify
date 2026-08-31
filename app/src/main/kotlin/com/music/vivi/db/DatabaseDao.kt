@@ -938,6 +938,71 @@ interface DatabaseDao {
 
     @Transaction
     @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
+    @Query("SELECT * FROM album WHERE EXISTS(SELECT 1 FROM song WHERE song.albumId = album.id AND song.isDownloaded = 1) ORDER BY rowId")
+    fun downloadedAlbumsByCreateDateAsc(): Flow<List<Album>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
+    @Query("SELECT * FROM album WHERE EXISTS(SELECT 1 FROM song WHERE song.albumId = album.id AND song.isDownloaded = 1) ORDER BY title")
+    fun downloadedAlbumsByNameAsc(): Flow<List<Album>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
+    @Query("SELECT * FROM album WHERE EXISTS(SELECT 1 FROM song WHERE song.albumId = album.id AND song.isDownloaded = 1) ORDER BY year")
+    fun downloadedAlbumsByYearAsc(): Flow<List<Album>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
+    @Query("SELECT * FROM album WHERE EXISTS(SELECT 1 FROM song WHERE song.albumId = album.id AND song.isDownloaded = 1) ORDER BY songCount")
+    fun downloadedAlbumsBySongCountAsc(): Flow<List<Album>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
+    @Query("SELECT * FROM album WHERE EXISTS(SELECT 1 FROM song WHERE song.albumId = album.id AND song.isDownloaded = 1) ORDER BY duration")
+    fun downloadedAlbumsByLengthAsc(): Flow<List<Album>>
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
+    @Query(
+        """
+        SELECT album.*
+        FROM album
+                 JOIN song
+                      ON song.albumId = album.id
+        WHERE song.isDownloaded = 1
+        GROUP BY album.id
+        ORDER BY SUM(song.totalPlayTime)
+    """
+    )
+    fun downloadedAlbumsByPlayTimeAsc(): Flow<List<Album>>
+
+    fun downloadedAlbums(
+        sortType: AlbumSortType,
+        descending: Boolean,
+    ) = when (sortType) {
+        AlbumSortType.CREATE_DATE -> downloadedAlbumsByCreateDateAsc()
+        AlbumSortType.NAME ->
+            downloadedAlbumsByNameAsc().map { albums ->
+                val collator = Collator.getInstance(Locale.getDefault())
+                collator.strength = Collator.PRIMARY
+                albums.sortedWith(compareBy(collator) { it.album.title })
+            }
+
+        AlbumSortType.ARTIST ->
+            downloadedAlbumsByCreateDateAsc().map { albums ->
+                val collator = Collator.getInstance(Locale.getDefault())
+                collator.strength = Collator.PRIMARY
+                albums.sortedWith(compareBy(collator) { album -> album.artists.joinToString("") { it.name } })
+            }
+
+        AlbumSortType.YEAR -> downloadedAlbumsByYearAsc()
+        AlbumSortType.SONG_COUNT -> downloadedAlbumsBySongCountAsc()
+        AlbumSortType.LENGTH -> downloadedAlbumsByLengthAsc()
+        AlbumSortType.PLAY_TIME -> downloadedAlbumsByPlayTimeAsc()
+    }.map { it.reversed(descending) }
+
+    @Transaction
+    @SuppressWarnings(RoomWarnings.QUERY_MISMATCH)
     @Query("SELECT * FROM album WHERE id = :id")
     fun album(id: String): Flow<Album?>
 

@@ -81,6 +81,7 @@ import com.music.vivi.ui.component.AlbumGridItem
 import com.music.vivi.ui.component.AlbumListItem
 import com.music.vivi.ui.component.ArtistGridItem
 import com.music.vivi.ui.component.ArtistListItem
+import com.music.vivi.ui.component.CompactPlaylistTile
 import com.music.vivi.ui.component.LocalMenuState
 import com.music.vivi.ui.component.PlaylistGridItem
 import com.music.vivi.ui.component.PlaylistListItem
@@ -600,19 +601,13 @@ fun LibraryMixScreen(
                             key = "likedPlaylist",
                             contentType = { CONTENT_TYPE_PLAYLIST },
                         ) {
-                            PlaylistGridItem(
+                            CompactPlaylistTile(
                                 playlist = likedPlaylist,
-                                fillMaxWidth = true,
                                 autoPlaylist = true,
-                                modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .combinedClickable(
-                                        onClick = {
-                                            navController.navigate("auto_playlist/liked")
-                                        },
-                                    )
-                                    .animateItem(),
+                                onClick = {
+                                    navController.navigate("auto_playlist/liked")
+                                },
+                                modifier = Modifier.fillMaxWidth().animateItem(),
                             )
                         }
                     }
@@ -622,19 +617,13 @@ fun LibraryMixScreen(
                             key = "downloadedPlaylist",
                             contentType = { CONTENT_TYPE_PLAYLIST },
                         ) {
-                            PlaylistGridItem(
+                            CompactPlaylistTile(
                                 playlist = downloadPlaylist,
-                                fillMaxWidth = true,
                                 autoPlaylist = true,
-                                modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .combinedClickable(
-                                        onClick = {
-                                            navController.navigate("auto_playlist/downloaded")
-                                        },
-                                    )
-                                    .animateItem(),
+                                onClick = {
+                                    navController.navigate("auto_playlist/downloaded")
+                                },
+                                modifier = Modifier.fillMaxWidth().animateItem(),
                             )
                         }
                     }
@@ -644,19 +633,13 @@ fun LibraryMixScreen(
                             key = "TopPlaylist",
                             contentType = { CONTENT_TYPE_PLAYLIST },
                         ) {
-                            PlaylistGridItem(
+                            CompactPlaylistTile(
                                 playlist = topPlaylist,
-                                fillMaxWidth = true,
                                 autoPlaylist = true,
-                                modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .combinedClickable(
-                                        onClick = {
-                                            navController.navigate("top_playlist/$topSize")
-                                        },
-                                    )
-                                    .animateItem(),
+                                onClick = {
+                                    navController.navigate("top_playlist/$topSize")
+                                },
+                                modifier = Modifier.fillMaxWidth().animateItem(),
                             )
                         }
                     }
@@ -666,19 +649,13 @@ fun LibraryMixScreen(
                             key = "cachePlaylist",
                             contentType = { CONTENT_TYPE_PLAYLIST },
                         ) {
-                            PlaylistGridItem(
+                            CompactPlaylistTile(
                                 playlist = cachePlaylist,
-                                fillMaxWidth = true,
                                 autoPlaylist = true,
-                                modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .combinedClickable(
-                                        onClick = {
-                                            navController.navigate("cache_playlist/cached")
-                                        },
-                                    )
-                                    .animateItem(),
+                                onClick = {
+                                    navController.navigate("cache_playlist/cached")
+                                },
+                                modifier = Modifier.fillMaxWidth().animateItem(),
                             )
                         }
                     }
@@ -688,17 +665,13 @@ fun LibraryMixScreen(
                             key = "uploadedPlaylist",
                             contentType = { CONTENT_TYPE_PLAYLIST },
                         ) {
-                            PlaylistGridItem(
+                            CompactPlaylistTile(
                                 playlist = uploadedPlaylist,
-                                fillMaxWidth = true,
                                 autoPlaylist = true,
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            navController.navigate("auto_playlist/uploaded")
-                                        }
-                                        .animateItem(),
+                                onClick = {
+                                    navController.navigate("auto_playlist/uploaded")
+                                },
+                                modifier = Modifier.fillMaxWidth().animateItem(),
                             )
                         }
                     }

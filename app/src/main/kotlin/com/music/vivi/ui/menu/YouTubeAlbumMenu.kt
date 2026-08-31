@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.core.net.toUri
+import java.time.LocalDateTime
 import androidx.media3.exoplayer.offline.Download
 import androidx.media3.exoplayer.offline.DownloadRequest
 import androidx.media3.exoplayer.offline.DownloadService
@@ -493,6 +494,18 @@ fun YouTubeAlbumMenu(
                                     )
                                 },
                                 onClick = {
+                                    coroutineScope.launch(Dispatchers.IO) {
+                                        album?.let { albumWithSongs ->
+                                            database.query {
+                                                if (albumWithSongs.album.bookmarkedAt == null) {
+                                                    update(albumWithSongs.album.copy(bookmarkedAt = LocalDateTime.now()))
+                                                }
+                                                albumWithSongs.songs.forEach { song ->
+                                                    insert(song.song.copy(albumId = albumWithSongs.album.id, isDownloaded = true))
+                                                }
+                                            }
+                                        }
+                                    }
                                     album?.songs?.forEach { song ->
                                         val downloadRequest =
                                             DownloadRequest
