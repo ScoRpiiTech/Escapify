@@ -75,6 +75,15 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Feature & Enhancement / SponsorBlock, Lyrics v2 Smooth Scroll & Search Accuracy (v6.1.9)] - 2026-09-02
+- **SponsorBlock Integration**:
+  - Automatically skips non-music dialogues, intro/outro scenes, and sponsor ads in YouTube video songs.
+  - Added SponsorBlock configuration screen in Player & Audio settings with category filters and skip toasts.
+- **Lyrics v2 Smoothness & Clipping Fix**:
+  - Cleaned up line container rendering to eliminate edge clipping and jitter during synchronized auto-scroll.
+- **Search Suggestion Accuracy**:
+  - Removed blind unverified fallback in suggestion click handler to guarantee only matching tracks and artists play.
+
 ### [Bugfix & In-App Updater / Restore Seamless In-App APK Download & Notification Navigation (v6.1.8)] - 2026-09-02
 - **Direct In-App Updater Flow**:
   - Restored in-app updater navigation: clicking the system update notification now launches Escapify directly into the `UpdateScreen` instead of firing an external browser download link.

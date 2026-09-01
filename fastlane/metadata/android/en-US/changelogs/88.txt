@@ -1,0 +1,6 @@
+Description::Escapify v6.1.9 introduces full SponsorBlock integration to automatically skip video ads and non-music scenes, smooth Lyrics v2 synchronized scrolling with zero text clipping, and enhanced search suggestion matching accuracy.
+Image::https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png
+* Integrated SponsorBlock: automatically skip sponsor ads, dialogues, intros, and non-music segments in music videos
+* Added SponsorBlock customization settings in Player & Audio with category toggles and skip toasts
+* Fixed Lyrics v2 rendering: eliminated line clipping, layout jumps, and stutter during auto-scroll
+* Enhanced Search Suggestions: removed unverified fallback to ensure accurate track and artist playback
