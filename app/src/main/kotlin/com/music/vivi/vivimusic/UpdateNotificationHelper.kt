@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import com.music.vivi.MainActivity
 import com.music.vivi.R
 import com.music.vivi.constants.EnableNotificationsKey
 import com.music.vivi.utils.dataStore
@@ -36,13 +37,12 @@ object UpdateNotificationHelper {
             nm.createNotificationChannel(channel)
         }
 
-        // Direct download URL format from vivimusicupdater - use the full tag (vX.X.X or bX.X.X) or nightly link
-        val apkUrl = if (versionName.contains("nightly", ignoreCase = true)) {
-            "https://nightly.link/ScoRpiiTech/Escapify/workflows/build-and-release.yml/custom-build/Escapify-Universal.zip"
-        } else {
-            "https://github.com/ScoRpiiTech/Escapify/releases/download/$versionName/Escapify.apk"
+        val intent = Intent(context, MainActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+            data = "escapify://update".toUri()
+            putExtra("open_route", "update")
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
-        val intent = Intent(Intent.ACTION_VIEW, apkUrl.toUri())
 
         val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         val pending = PendingIntent.getActivity(context, NOTIFICATION_ID, intent, flags)

@@ -1,0 +1,6 @@
+Description::Escapify v6.1.8 restores the direct in-app updater for all builds. Tap update notifications or in-app prompts to view changelogs, download APKs directly inside Escapify, and install with 1 tap without any browser redirection.
+Image::https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png
+* Fixed in-app update navigation: tapping update notifications now opens the in-app Update Screen directly instead of redirecting to the browser
+* Removed legacy FOSS browser redirects: both GMS and Universal FOSS builds now support full in-app downloads with live progress bar
+* Automatic flavor APK matching ensures your app downloads the exact matching build variant seamlessly
+* Added escapify://update deep link support

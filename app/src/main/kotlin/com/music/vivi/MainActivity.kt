@@ -804,16 +804,7 @@ class MainActivity : ComponentActivity() {
                             actionLabel = R.string.action_view_update,
                             duration = SnackbarDuration.Indefinite,
                             onAction = {
-                                val isFoss = !BuildConfig.CAST_AVAILABLE
-                                if (isFoss) {
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse("https://github.com/ScoRpiiTech/Escapify/releases/latest")
-                                    )
-                                    context.startActivity(intent)
-                                } else {
-                                    navController.navigate("update")
-                                }
+                                navController.navigate("update")
                             }
                         )
                     }
@@ -1299,9 +1290,21 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleDeepLinkIntent(intent: Intent, navController: NavHostController) {
+        if (intent.getStringExtra("open_route") == "update") {
+            intent.removeExtra("open_route")
+            navController.navigate("update")
+            return
+        }
         val uri = intent.data ?: intent.extras?.getString(Intent.EXTRA_TEXT)?.toUri() ?: return
         intent.data = null
         intent.removeExtra(Intent.EXTRA_TEXT)
+
+        if ((uri.scheme == "escapify" || uri.scheme == "vivimusic") &&
+            (uri.host == "update" || uri.pathSegments.firstOrNull() == "update")
+        ) {
+            navController.navigate("update")
+            return
+        }
         val coroutineScope = lifecycle.coroutineScope
 
         val listenCode = uri.getQueryParameter("code")

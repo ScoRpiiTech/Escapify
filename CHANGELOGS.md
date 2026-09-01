@@ -75,6 +75,13 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Bugfix & In-App Updater / Restore Seamless In-App APK Download & Notification Navigation (v6.1.8)] - 2026-09-02
+- **Direct In-App Updater Flow**:
+  - Restored in-app updater navigation: clicking the system update notification now launches Escapify directly into the `UpdateScreen` instead of firing an external browser download link.
+  - Removed legacy upstream FOSS restrictions: both GMS and Universal FOSS builds now use the in-app background downloader with live progress bar and 1-tap installation.
+  - Added automatic flavor APK matching in `checkForUpdate` so users download the matching variant seamlessly.
+  - Added `escapify://update` deep link support in `AndroidManifest.xml` and `MainActivity.kt`.
+
 ### [Branding & UX / Official Release Banner & Enlarged Launcher Logo (v6.1.7)] - 2026-09-01
 - **Official Escapify Promotional Banner**:
   - Replaced legacy banner with an official promotional banner featuring Escapify branding, acoustic glow, and neu-glassmorphic styling across in-app update cards and GitHub releases.

@@ -922,19 +922,37 @@ suspend fun checkForUpdate(
                     val formattedReleaseDate = formatGitHubDate(publishedAt)
                     val assets = targetRelease.getJSONArray("assets")
 
+                    val isFoss = !BuildConfig.CAST_AVAILABLE
                     var apkSizeInMB = ""
                     var apkDownloadUrl = ""
+                    var fallbackApkUrl = ""
+                    var fallbackApkSize = ""
                     for (j in 0 until assets.length()) {
                         val asset = assets.getJSONObject(j)
                         val assetName = asset.getString("name")
                         if (assetName.endsWith(".apk", ignoreCase = true)) {
                             val apkSizeInBytes = asset.getLong("size")
-                            apkSizeInMB = String.format("%.1f", apkSizeInBytes / (1024.0 * 1024.0))
-                            apkDownloadUrl = asset.getString("browser_download_url")
-                            if (assetName.contains("escapify", ignoreCase = true) || assetName.contains("universal", ignoreCase = true)) {
+                            val sizeMB = String.format("%.1f", apkSizeInBytes / (1024.0 * 1024.0))
+                            val downloadUrl = asset.getString("browser_download_url")
+                            if (fallbackApkUrl.isEmpty()) {
+                                fallbackApkUrl = downloadUrl
+                                fallbackApkSize = sizeMB
+                            }
+                            val matchesFlavor = if (isFoss) {
+                                assetName.contains("universal", ignoreCase = true) || assetName.contains("foss", ignoreCase = true)
+                            } else {
+                                !assetName.contains("universal", ignoreCase = true) && !assetName.contains("foss", ignoreCase = true)
+                            }
+                            if (matchesFlavor) {
+                                apkSizeInMB = sizeMB
+                                apkDownloadUrl = downloadUrl
                                 break
                             }
                         }
+                    }
+                    if (apkDownloadUrl.isEmpty()) {
+                        apkDownloadUrl = fallbackApkUrl
+                        apkSizeInMB = fallbackApkSize
                     }
 
                     if (apkDownloadUrl.isNotEmpty()) {
