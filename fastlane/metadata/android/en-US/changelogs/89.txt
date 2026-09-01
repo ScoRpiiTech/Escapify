@@ -1,0 +1,6 @@
+Description::Escapify v6.2.0 introduces the official Green-on-White launcher icon with dynamic Dark Mode support, changelog banner cache invalidation, and upstream stability enhancements.
+Image::https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png?v=89
+* Official Launcher Icon: vibrant Escapify green soundwave emblem on pure white, removing the legacy green disc
+* Dynamic Day/Night Launcher Theme: pure white background in Light Mode, deep dark in Dark Mode
+* Themed Icons support: adaptive monochrome silhouette for Material You
+* Fixed Changelog Banner: sanitized image URLs and added cache-busting so the Escapify banner loads cleanly

@@ -75,6 +75,17 @@ git push -f origin custom-build
 
 ## 📝 Change Log & Release Tracker
 
+### [Branding & UX / Official Green-on-White Icon & Dynamic Dark Mode Launcher (v6.2.0)] - 2026-09-02
+- **Official Launcher Icon Overhaul**:
+  - Removed legacy circular green background disc entirely.
+  - Rendered prominent, enlarged Escapify green soundwave emblem on pure white background.
+  - Added dynamic Day/Night launcher icon background (`#FFFFFF` in Light Mode, `#121212` in Dark Mode).
+  - Material You themed monochrome layer adapts to system color palettes.
+- **Changelog Banner Sanitization & Cache Invalidation**:
+  - Attached `?v=$tag` cache buster to release banner image URLs to bypass stale device disk caches.
+  - Dynamically sanitizes any legacy upstream URLs in the Changelog screen and Update screen.
+  - Added force cache invalidation on pull-to-refresh.
+
 ### [Feature & Enhancement / SponsorBlock, Lyrics v2 Smooth Scroll & Search Accuracy (v6.1.9)] - 2026-09-02
 - **SponsorBlock Integration**:
   - Automatically skips non-music dialogues, intro/outro scenes, and sponsor ads in YouTube video songs.
