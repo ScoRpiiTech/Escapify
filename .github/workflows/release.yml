@@ -209,22 +209,36 @@ jobs:
           with open("release_assets/changelog.json", "w", encoding="utf-8") as f:
               json.dump(data, f, indent=2)
 
+          with open("release_notes.md", "w", encoding="utf-8") as f:
+              if image_url:
+                  f.write(f"![Escapify Banner]({image_url})\n\n")
+              if description:
+                  f.write(f"{description}\n\n")
+              if features:
+                  f.write("### ✨ What's New in Escapify\n")
+                  for feat in features:
+                      f.write(f"* {feat}\n")
+                  f.write("\n")
+              if fixes:
+                  f.write("### 🛠️ Fixes & Improvements\n")
+                  for fix in fixes:
+                      f.write(f"* {fix}\n")
+                  f.write("\n")
+              f.write("---\n### 📲 Downloads\n* **Standard Build (GMS)**: `Escapify.apk`\n* **Universal Standalone**: `Escapify-Universal.apk`\n")
+
       - name: Create GitHub Release & Upload Assets
         if: steps.check_release.outputs.exists == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION_CODE="${{ steps.version_info.outputs.version_code }}"
           VERSION_NAME="${{ steps.version_info.outputs.version_name }}"
-          NOTES_FILE="fastlane/metadata/android/en-US/changelogs/${VERSION_CODE}.txt"
           
-          if [ -f "$NOTES_FILE" ]; then
-            cat "$NOTES_FILE" > release_notes.txt
-          else
-            echo "Escapify v$VERSION_NAME" > release_notes.txt
+          NOTES_FILE="release_notes.md"
+          if [ ! -f "$NOTES_FILE" ]; then
+            echo "Escapify v$VERSION_NAME" > release_notes.md
           fi
           
           gh release create "v$VERSION_NAME" release_assets/* \
             --title "Escapify v$VERSION_NAME" \
-            --notes-file release_notes.txt \
+            --notes-file release_notes.md \
             --target custom-build
