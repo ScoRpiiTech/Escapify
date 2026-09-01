@@ -389,7 +389,6 @@ fun LyricsV2(
                                     val index = item.index
                                     val line = item.entry
                                     val isActive = index == currentLineIndex
-                                    val isPassed = index < currentLineIndex
                                     val distanceFromActive =
                                         kotlin.math.abs(index - currentLineIndex)
 

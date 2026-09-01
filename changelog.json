@@ -1,30 +1,23 @@
 {
-  "version": "6.0.5",
-  "description": "VIVI MUSIC v6.0.5 brings floating navbar (default off, can be enabled in appearance settings), album song listing can be disabled through appearance setting, ui to vivi-decrypter, and other improvements. It also includes several bug fixes.",
-  "image": "https://raw.githubusercontent.com/vivizzz007/vivi-music/main/NEW-UI/update/v6.0.5.jpg",
+  "version": "6.1.9",
+  "description": "Escapify brings exciting new updates, SponsorBlock integration, smooth 120Hz lyrics, and custom enhancements.",
+  "image": "https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png",
   "changelog": [
     {
-      "title": "What's New",
+      "title": "What's New in Escapify",
       "items": [
-        "added floating navbar (default off, can be enabled in appearance settings)",
-        "added new album song listing can be disabled through appearance setting",
-        "added new ui to vivi-decrypter",
-        "added new update banner, thanks to Aldeic"
+        "Integrated SponsorBlock: automatically skip sponsor ads, dialogues, and non-music sections in music videos",
+        "Added SponsorBlock customization settings under Player & Audio with category toggles and skip toasts",
+        "Fixed Lyrics v2 rendering: smooth synchronized scrolling without text clipping or stutter",
+        "Enhanced Search Suggestions: accurate track and artist playback matching"
       ]
     },
     {
       "title": "Fixes & Improvements",
       "items": [
-        "fixed spotify login through google",
-        "fixed jio saavan random song playing"
-      ]
-    },
-    {
-      "title": "Support",
-      "items": [
-        "Support development on Ko-fi: https://ko-fi.com/vividhpashokan",
-        "Support via UPI: vividhpashokan@axl",
-        "Support via PayPal: https://www.paypal.me/vividhpashokan"
+        "Restored direct in-app updater and 1-tap APK install",
+        "Overhauled download engine with 1-tap ghost track cleanup and storage integrity repairs",
+        "High-contrast enlarged app launcher icon and official release banner"
       ]
     }
   ]

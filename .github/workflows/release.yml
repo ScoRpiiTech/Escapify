@@ -142,7 +142,7 @@ jobs:
           features = []
           fixes = []
           description = None
-          image_url = "https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png"
+          image_url = f"https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png?v={version_code}"
           
           if os.path.exists(changelog_file):
               with open(changelog_file, 'r', encoding='utf-8') as f:

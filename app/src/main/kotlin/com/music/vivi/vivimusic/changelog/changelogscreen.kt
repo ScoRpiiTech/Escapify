@@ -125,16 +125,29 @@ fun ChangelogScreen(
         else LinearOutSlowInEasing.transform(pullToRefreshState.distanceFraction).coerceIn(0f, 1f)
     }
 
-    fun fetchChangelog(tag: String) {
+    fun fetchChangelog(tag: String, forceRefresh: Boolean = false) {
         isLoading = true
         hasError = false
         coroutineScope.launch(Dispatchers.IO) {
             try {
-                val cachedData = loadChangelogFromCache(context, tag)
+                if (forceRefresh) {
+                    try {
+                        context.deleteFile("changelog_cache_$tag.json")
+                    } catch (_: Exception) {}
+                }
+                val cachedData = if (!forceRefresh) loadChangelogFromCache(context, tag) else null
                 if (cachedData != null) {
                     withContext(Dispatchers.Main) {
                         changelogSections = cachedData.sections
-                        updateImage = cachedData.image
+                        updateImage = cachedData.image?.let { url ->
+                            when {
+                                url.contains("vivizzz007") || url.contains("vivi-music") ->
+                                    "https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png?v=$tag"
+                                url.contains("assets/banner.png") && !url.contains("?v=") ->
+                                    "$url?v=$tag"
+                                else -> url
+                            }
+                        }
                         updateDescription = cachedData.description
                         updateWarning = cachedData.warning
                         isLoading = false
@@ -184,10 +197,19 @@ fun ChangelogScreen(
                             }
                         }
                         
-                        saveChangelogToCache(context, tag, sections, imageUrl, desc, warning)
+                        val sanitizedImageUrl = imageUrl.takeIf { !it.isNullOrBlank() }?.let { url ->
+                            when {
+                                url.contains("vivizzz007") || url.contains("vivi-music") ->
+                                    "https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png?v=$tag"
+                                url.contains("assets/banner.png") && !url.contains("?v=") ->
+                                    "$url?v=$tag"
+                                else -> url
+                            }
+                        }
+                        saveChangelogToCache(context, tag, sections, sanitizedImageUrl, desc, warning)
                         withContext(Dispatchers.Main) {
                             changelogSections = sections
-                            updateImage = imageUrl.takeIf { !it.isNullOrBlank() }
+                            updateImage = sanitizedImageUrl
                             updateDescription = desc.takeIf { !it.isNullOrBlank() }
                             updateWarning = warning.takeIf { !it.isNullOrBlank() }
                             isLoading = false
@@ -278,7 +300,7 @@ fun ChangelogScreen(
         modifier = Modifier.pullToRefresh(
             state = pullToRefreshState,
             isRefreshing = isRefreshing,
-            onRefresh = { fetchChangelog(currentVersionTag) }
+            onRefresh = { fetchChangelog(currentVersionTag, forceRefresh = true) }
         ),
         topBar = {
             TopAppBar(
