@@ -491,9 +491,9 @@ fun UpdateScreen(navController: NavHostController) {
                                         if (!currentStatus.imageUrl.isNullOrBlank()) {
                                             val sanitizedUrl = when {
                                                 currentStatus.imageUrl.contains("vivizzz007") || currentStatus.imageUrl.contains("vivi-music") ->
-                                                    "https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png?v=${currentStatus.tag}"
+                                                    "https://raw.githubusercontent.com/ScoRpiiTech/Escapify/custom-build/assets/banner.png?v=${currentStatus.version}"
                                                 currentStatus.imageUrl.contains("assets/banner.png") && !currentStatus.imageUrl.contains("?v=") ->
-                                                    "${currentStatus.imageUrl}?v=${currentStatus.tag}"
+                                                    "${currentStatus.imageUrl}?v=${currentStatus.version}"
                                                 else -> currentStatus.imageUrl
                                             }
                                             AsyncImage(
